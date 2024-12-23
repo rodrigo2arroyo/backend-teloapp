@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "generate-sdk": "npx openapi-generator-cli generate -i http://localhost:5125/swagger/v1/swagger.json -g typescript-axios -o ./sdk"
+    "generate-sdk": "npx openapi-generator-cli generate -i http://localhost:5125/swagger/v1/swagger.json -g typescript-axios -o ./sdk",
+    "generate-models": "dotnet ef dbcontext scaffold \"Server=DESKTOP-8RM0SDJ;Database=TeloDB;Trusted_Connection=True;TrustServerCertificate=True;\" Microsoft.EntityFrameworkCore.SqlServer -o Models -c AppDbContext --context-dir Contexts --force"
   },
   "keywords": [],
   "author": "",

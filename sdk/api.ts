@@ -26,6 +26,31 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface Hotel
+ */
+export interface Hotel {
+    /**
+     * 
+     * @type {string}
+     * @memberof Hotel
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Hotel
+     */
+    'locationId'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof Hotel
+     */
+    'createdAt'?: string | null;
+}
+/**
+ * 
+ * @export
  * @interface Transshipment
  */
 export interface Transshipment {
@@ -67,6 +92,103 @@ export interface TransshipmentDto {
      */
     'status'?: string | null;
 }
+
+/**
+ * HotelApi - axios parameter creator
+ * @export
+ */
+export const HotelApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hotelGetAllHotels: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Hotel`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * HotelApi - functional programming interface
+ * @export
+ */
+export const HotelApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = HotelApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async hotelGetAllHotels(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Hotel>>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.hotelGetAllHotels(options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HotelApi.hotelGetAllHotels']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * HotelApi - factory interface
+ * @export
+ */
+export const HotelApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = HotelApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        hotelGetAllHotels(options?: RawAxiosRequestConfig): AxiosPromise<Array<Hotel>> {
+            return localVarFp.hotelGetAllHotels(options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * HotelApi - object-oriented interface
+ * @export
+ * @class HotelApi
+ * @extends {BaseAPI}
+ */
+export class HotelApi extends BaseAPI {
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HotelApi
+     */
+    public hotelGetAllHotels(options?: RawAxiosRequestConfig) {
+        return HotelApiFp(this.configuration).hotelGetAllHotels(options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * TransshipmentApi - axios parameter creator

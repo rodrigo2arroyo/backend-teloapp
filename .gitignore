@@ -1,0 +1,24 @@
+# Build directories
+bin/
+obj/
+
+# Rider/JetBrains files
+.idea/
+*.sln.iml
+
+# Caches y archivos de configuración temporales
+*.cache
+*.info
+*.nuget/
+
+# Archivos generados por el compilador
+*.dll
+*.exe
+*.pdb
+*.json
+*.log
+*.runtimeconfig.json
+*.deps.json
+
+# EditorConfig generados
+*.editorconfig
