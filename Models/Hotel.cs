@@ -9,7 +9,7 @@ public partial class Hotel
 
     public string Name { get; set; } = null!;
 
-    public int LocationId { get; set; }
+    public int? LocationId { get; set; }
 
     public DateTime CreatedAt { get; set; }
 
@@ -21,7 +21,7 @@ public partial class Hotel
 
     public string? UpdatedBy { get; set; }
 
-    public virtual Location Location { get; set; } = null!;
+    public virtual Location? Location { get; set; }
 
     public virtual ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
 

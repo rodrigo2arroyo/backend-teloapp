@@ -19,7 +19,7 @@ public partial class Service
 
     public string? UpdatedBy { get; set; }
 
-    public virtual ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();
+    public virtual ICollection<ServicePromotion> ServicePromotions { get; set; } = new List<ServicePromotion>();
 
-    public virtual ICollection<Rate> Rates { get; set; } = new List<Rate>();
+    public virtual ICollection<ServiceRate> ServiceRates { get; set; } = new List<ServiceRate>();
 }

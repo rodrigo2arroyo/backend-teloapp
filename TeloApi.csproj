@@ -15,6 +15,18 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.1.0" />
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Hotel\Controller\" />
+    <Folder Include="Features\Hotel\DTOs\" />
+    <Folder Include="Features\Hotel\Repositories\" />
+    <Folder Include="Features\Hotel\Services\" />
+    <Folder Include="Features\Promotion\Controller\" />
+    <Folder Include="Features\Promotion\DTOs\" />
+    <Folder Include="Features\Promotion\Repositories\" />
+    <Folder Include="Features\Promotion\Services\" />
   </ItemGroup>
 
 </Project>

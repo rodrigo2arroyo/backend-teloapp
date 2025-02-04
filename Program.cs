@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using TeloApi.Contexts;
+using TeloApi.Features.Rate.Repositories;
+using TeloApi.Features.Rate.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +17,21 @@ builder.Services.AddCors(options =>
     });
 });
 
+// Registrar RateService y RateRepository
+builder.Services.AddScoped<IRateService, RateService>();
+builder.Services.AddScoped<IRateRepository, RateRepository>();
+
 // Otros servicios como controllers y swagger
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+    });
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddControllers();
+
 builder.Services.AddSwaggerGen(c =>
 {
     // Configuración de Swagger

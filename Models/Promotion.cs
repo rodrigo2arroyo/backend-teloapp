@@ -9,8 +9,6 @@ public partial class Promotion
 
     public int HotelId { get; set; }
 
-    public int ServiceId { get; set; }
-
     public string RateType { get; set; } = null!;
 
     public string? Description { get; set; }
@@ -35,5 +33,5 @@ public partial class Promotion
 
     public virtual Hotel Hotel { get; set; } = null!;
 
-    public virtual Service Service { get; set; } = null!;
+    public virtual ICollection<ServicePromotion> ServicePromotions { get; set; } = new List<ServicePromotion>();
 }
