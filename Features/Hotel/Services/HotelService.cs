@@ -1,8 +1,11 @@
+using System.Diagnostics;
+using System.Xml;
+using TeloApi.Features.Hotel.DTOs;
 using TeloApi.Features.Hotel.Repositories;
-using TeloApi.Models;
 using TeloApi.Shared;
 
 namespace TeloApi.Features.Hotel.Services;
+using Models;
 
 public class HotelService : IHotelService
 {
@@ -55,5 +58,90 @@ public class HotelService : IHotelService
     {
         var images = await _hotelRepository.GetHotelImagesAsync(hotelId);
         return images.Select(i => i.ImageUrl).ToList();
+    }
+    
+    public async Task<GenericResponse> CreateHotelAsync(CreateHotel request)
+    {
+        var hotel = new Hotel
+        {
+            Name = request.Name,
+            Location = new Location
+            {
+                City = request.Location.City,
+                District = request.Location.District,
+                Street = request.Location.Street
+            },
+            CreatedBy = request.CreatedBy
+        };
+
+        var createdHotel = await _hotelRepository.CreateHotelAsync(hotel);
+
+        return new GenericResponse { Id = createdHotel.Id, Message = "Hotel created successfully." };
+    }
+
+    public async Task<GenericResponse> UpdateHotelAsync(UpdateHotel request)
+    {
+        var hotel = await _hotelRepository.GetHotelByIdWithDetailsAsync(request.Id);
+        if (hotel == null)
+            return new GenericResponse { Message = "Hotel not found." };
+
+        hotel.Name = request.Name;
+        hotel.Location.City = request.Location.City;
+        hotel.Location.District = request.Location.District;
+        hotel.Location.Street = request.Location.Street;
+        hotel.UpdatedBy = request.UpdatedBy;
+
+        var updatedHotel = await _hotelRepository.UpdateHotelAsync(hotel);
+
+        return new GenericResponse { Id = updatedHotel.Id, Message = "Hotel updated successfully." };
+    }
+
+    public async Task<HotelResponse> GetHotelByIdAsync(int hotelId)
+    {
+        var hotel = await _hotelRepository.GetHotelByIdWithDetailsAsync(hotelId);
+        Trace.WriteLine(hotel);
+        if (hotel == null) return null;
+
+        return new HotelResponse
+        {
+            Id = hotel.Id,
+            Name = hotel.Name,
+            Location = new LocationDto
+            {
+                City = hotel.Location.City,
+                District = hotel.Location.District,
+                Street = hotel.Location.Street
+            },
+            Rates = hotel.Rates.Select(r => new RateResponse
+            {
+                Id = r.Id,
+                RateType = r.RateType,
+                Description = r.Description,
+                Price = r.Price,
+                Services = r.ServiceRates.Select(sr => new ServiceResponse
+                {
+                    Id = sr.Service.Id,
+                    Name = sr.Service.Name
+                }).ToList()
+            }).ToList(),
+            Promotions = hotel.Promotions.Select(p => new PromotionResponse
+            {
+                Id = p.Id,
+                Description = p.Description,
+                PromotionalPrice = p.PromotionalPrice,
+                Services = p.ServicePromotions.Select(sp => new ServiceResponse
+                {
+                    Id = sp.Service.Id,
+                    Name = sp.Service.Name
+                }).ToList()
+            }).ToList(),
+            Reviews = hotel.Reviews.Select(r => new ReviewResponse
+            {
+                Id = r.Id,
+                Author = r.Author,
+                Description = r.Description,
+                Rating = 0
+            }).ToList()
+        };
     }
 }

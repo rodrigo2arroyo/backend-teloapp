@@ -7,6 +7,8 @@ using TeloApi.Features.Promotion.Repositories;
 using TeloApi.Features.Promotion.Services;
 using TeloApi.Features.Rate.Repositories;
 using TeloApi.Features.Rate.Services;
+using TeloApi.Features.Review.Repositories;
+using TeloApi.Features.Review.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,8 @@ builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
 builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 
 // Otros servicios como controllers y swagger
