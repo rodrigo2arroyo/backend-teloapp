@@ -1,10 +1,10 @@
 namespace TeloApi.Features.Rate.Repositories;
-using TeloApi.Models;
+using Models;
 
 public interface IRateRepository
 {
-    Task<Rate> CreateRateAsync(Rate rate, List<int> serviceIds);
-    Task<Rate> UpdateRateAsync(Rate rate, List<int> serviceIds);
-    Task<Rate> GetRateByIdAsync(int rateId);
-    Task<bool> DeleteRateAsync(int rateId);
+    Task<Rate> CreateRateAsync(Rate rate);
+    Task<Rate> UpdateRateAsync(Rate rate);
+    Task AddServiceToRateAsync(int rateId, int serviceId);
+    Task RemoveAllServicesFromRateAsync(int rateId);
 }

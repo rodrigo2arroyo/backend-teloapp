@@ -1,6 +1,6 @@
 namespace TeloApi.Features.Rate.DTOs;
 
-public class CreateRateDto
+public class CreateRate
 {
     public int HotelId { get; set; } // ID del hotel relacionado
     public string RateType { get; set; } // Tipo de tarifa

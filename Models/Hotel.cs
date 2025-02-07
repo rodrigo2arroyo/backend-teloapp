@@ -21,6 +21,8 @@ public partial class Hotel
 
     public string? UpdatedBy { get; set; }
 
+    public virtual ICollection<HotelImage> HotelImages { get; set; } = new List<HotelImage>();
+
     public virtual Location? Location { get; set; }
 
     public virtual ICollection<Promotion> Promotions { get; set; } = new List<Promotion>();

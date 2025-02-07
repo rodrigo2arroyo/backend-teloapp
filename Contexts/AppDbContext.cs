@@ -20,6 +20,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Hotel> Hotels { get; set; }
 
+    public virtual DbSet<HotelImage> HotelImages { get; set; }
+
     public virtual DbSet<Location> Locations { get; set; }
 
     public virtual DbSet<Promotion> Promotions { get; set; }
@@ -74,6 +76,22 @@ public partial class AppDbContext : DbContext
             entity.HasOne(d => d.Location).WithMany(p => p.Hotels)
                 .HasForeignKey(d => d.LocationId)
                 .HasConstraintName("FK_Hotel_Location");
+        });
+
+        modelBuilder.Entity<HotelImage>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__HotelIma__3214EC0770ACC693");
+
+            entity.ToTable("HotelImage");
+
+            entity.Property(e => e.ImageUrl).HasMaxLength(500);
+            entity.Property(e => e.UploadedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Hotel).WithMany(p => p.HotelImages)
+                .HasForeignKey(d => d.HotelId)
+                .HasConstraintName("FK__HotelImag__Hotel__489AC854");
         });
 
         modelBuilder.Entity<Location>(entity =>
@@ -156,10 +174,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.RateType)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Status)
-                .HasColumnType("bit") // Define la columna como tipo "bit" (1 o 0 en SQL Server)
-                .HasDefaultValue(true); // Esto permitirá usar true/false en C# pero guardar 1/0 en SQL Server
-
+            entity.Property(e => e.Status).HasDefaultValue(true);
             entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
             entity.Property(e => e.UpdatedBy)
                 .HasMaxLength(100)

@@ -1,163 +1,60 @@
-using Microsoft.EntityFrameworkCore;
-using TeloApi.Contexts;
 using TeloApi.Features.Rate.DTOs;
 using TeloApi.Features.Rate.Repositories;
-
+using TeloApi.Shared;
 
 namespace TeloApi.Features.Rate.Services;
-using TeloApi.Models;
-public class RateService : IRateService
+using Models;
+public class RateService(IRateRepository rateRepository) : IRateService
 {
-    private readonly IRateRepository _rateRepository;
-    private readonly AppDbContext _context; // Inyección de DbContext
-
-    public RateService(IRateRepository rateRepository, AppDbContext context)
+    public async Task<GenericResponse> CreateRateAsync(CreateRate request)
     {
-        _rateRepository = rateRepository;
-        _context = context;
-    }
-
-    // ✅ CREAR RATE Y ASOCIAR SERVICIOS
-    public async Task<RateResponse> CreateRateAsync(CreateRateDto request)
-    {
-        using var transaction = await _context.Database.BeginTransactionAsync(); // Transacción
-
-        try
+        var rate = new Rate
         {
-            var rate = new Rate
-            {
-                HotelId = request.HotelId,
-                RateType = request.RateType,
-                Description = request.Description,
-                Duration = request.Duration,
-                Price = request.Price,
-                Status = request.Status,
-                CreatedBy = request.CreatedBy,
-                CreatedAt = DateTime.UtcNow
-            };
-
-            _context.Rates.Add(rate);
-            await _context.SaveChangesAsync(); // Guardar primero para obtener el ID
-
-            if (request.ServiceIds != null && request.ServiceIds.Any())
-            {
-                var serviceRates = request.ServiceIds.Select(serviceId => new ServiceRate
-                {
-                    RateId = rate.Id,
-                    ServiceId = serviceId,
-                    CreatedAt = DateTime.UtcNow
-                }).ToList();
-
-                _context.ServiceRates.AddRange(serviceRates);
-                await _context.SaveChangesAsync();
-            }
-
-            await transaction.CommitAsync();
-            return await GetRateByIdAsync(rate.Id);
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
-    }
-
-    // ✅ ACTUALIZAR RATE Y MODIFICAR SERVICIOS
-    public async Task<RateResponse> UpdateRateAsync(UpdateRateDto request)
-    {
-        using var transaction = await _context.Database.BeginTransactionAsync(); // Transacción
-
-        try
-        {
-            var rate = await _context.Rates.FindAsync(request.Id);
-            if (rate == null) return null;
-
-            rate.RateType = request.RateType;
-            rate.Description = request.Description;
-            rate.Duration = request.Duration ?? rate.Duration;
-            rate.Price = request.Price ?? rate.Price;
-            rate.Status = request.Status ?? rate.Status;
-            rate.UpdatedBy = request.UpdatedBy;
-            rate.UpdatedAt = DateTime.UtcNow;
-
-            await _context.SaveChangesAsync();
-
-            var existingServiceRates = _context.ServiceRates.Where(sr => sr.RateId == rate.Id);
-            _context.ServiceRates.RemoveRange(existingServiceRates);
-            await _context.SaveChangesAsync();
-
-            if (request.ServiceIds != null && request.ServiceIds.Any())
-            {
-                var serviceRates = request.ServiceIds.Select(serviceId => new ServiceRate
-                {
-                    RateId = rate.Id,
-                    ServiceId = serviceId,
-                    CreatedAt = DateTime.UtcNow
-                }).ToList();
-
-                _context.ServiceRates.AddRange(serviceRates);
-                await _context.SaveChangesAsync();
-            }
-
-            await transaction.CommitAsync();
-            return await GetRateByIdAsync(rate.Id);
-        }
-        catch (Exception)
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
-    }
-    
-    public async Task<RateResponse> GetRateByIdAsync(int rateId)
-    {
-        var rate = await _context.Rates
-            .Include(r => r.ServiceRates)
-            .ThenInclude(sr => sr.Service) // Cargar los servicios relacionados
-            .FirstOrDefaultAsync(r => r.Id == rateId);
-
-        if (rate == null) return null;
-
-        return new RateResponse
-        {
-            Id = rate.Id,
-            RateType = rate.RateType,
-            Description = rate.Description,
-            Duration = rate.Duration,
-            Price = rate.Price,
-            Status = rate.Status == true,
-            Services = rate.ServiceRates
-                .Where(sr => sr.Service != null) // Evitar servicios nulos
-                .Select(sr => new ServiceResponse
-                {
-                    Id = sr.Service.Id,
-                    Name = sr.Service.Name
-                }).ToList()
+            HotelId = request.HotelId,
+            RateType = request.RateType,
+            Description = request.Description,
+            Duration = request.Duration,
+            Price = request.Price,
+            Status = request.Status,
+            CreatedBy = request.CreatedBy
         };
+
+        var createdRate = await rateRepository.CreateRateAsync(rate);
+
+        if (request.ServiceIds != null)
+        {
+            foreach (var serviceId in request.ServiceIds)
+            {
+                await rateRepository.AddServiceToRateAsync(createdRate.Id, serviceId);
+            }
+        }
+
+        return new GenericResponse { Id = createdRate.Id, Message = "Rate created successfully." };
     }
-    
-    public async Task<bool> DeleteRateAsync(DeleteRateDto request)
+
+    public async Task<GenericResponse> UpdateRateAsync(UpdateRate request)
     {
-        using var transaction = await _context.Database.BeginTransactionAsync(); // Transacción
-
-        try
+        var rate = await rateRepository.UpdateRateAsync(new Rate
         {
-            var rate = await _context.Rates.FindAsync(request.Id);
-            if (rate == null) return false;
+            Id = request.Id,
+            RateType = request.RateType,
+            Description = request.Description,
+            Duration = request.Duration ?? 0,
+            Price = request.Price ?? 0,
+            Status = request.Status ?? true,
+            UpdatedBy = request.UpdatedBy
+        });
 
-            _context.Rates.Remove(rate);
+        await rateRepository.RemoveAllServicesFromRateAsync(request.Id);
 
-            var relatedServiceRates = _context.ServiceRates.Where(sr => sr.RateId == rate.Id);
-            _context.ServiceRates.RemoveRange(relatedServiceRates);
-
-            await _context.SaveChangesAsync();
-            await transaction.CommitAsync();
-            return true;
-        }
-        catch (Exception)
+        if (request.ServiceIds != null)
         {
-            await transaction.RollbackAsync();
-            throw;
+            foreach (var serviceId in request.ServiceIds)
+            {
+                await rateRepository.AddServiceToRateAsync(request.Id, serviceId);
+            }
         }
+
+        return new GenericResponse { Id = request.Id, Message = "Rate updated successfully." };
     }
 }

@@ -1,6 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TeloApi.Contexts;
+using TeloApi.Features.Hotel.Repositories;
+using TeloApi.Features.Hotel.Services;
+using TeloApi.Features.Promotion.Repositories;
+using TeloApi.Features.Promotion.Services;
 using TeloApi.Features.Rate.Repositories;
 using TeloApi.Features.Rate.Services;
 
@@ -20,6 +24,11 @@ builder.Services.AddCors(options =>
 // Registrar RateService y RateRepository
 builder.Services.AddScoped<IRateService, RateService>();
 builder.Services.AddScoped<IRateRepository, RateRepository>();
+builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
+builder.Services.AddScoped<IHotelService, HotelService>();
+builder.Services.AddScoped<IHotelRepository, HotelRepository>();
+
 
 // Otros servicios como controllers y swagger
 builder.Services.AddControllers()
@@ -53,7 +62,7 @@ var app = builder.Build();
 
 // Usa CORS
 app.UseCors("PermitirTodo");
-
+app.UseStaticFiles();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

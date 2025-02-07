@@ -19,14 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\Hotel\Controller\" />
     <Folder Include="Features\Hotel\DTOs\" />
-    <Folder Include="Features\Hotel\Repositories\" />
-    <Folder Include="Features\Hotel\Services\" />
-    <Folder Include="Features\Promotion\Controller\" />
-    <Folder Include="Features\Promotion\DTOs\" />
-    <Folder Include="Features\Promotion\Repositories\" />
-    <Folder Include="Features\Promotion\Services\" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 namespace TeloApi.Features.Rate.DTOs;
 
-public class UpdateRateDto
+public class UpdateRate
 {
     public int Id { get; set; } // ID de la tarifa que se actualizará
     public string RateType { get; set; } // Tipo de tarifa (opcional)
