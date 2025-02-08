@@ -26,71 +26,364 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
- * @interface Hotel
+ * @interface CreateHotel
  */
-export interface Hotel {
+export interface CreateHotel {
     /**
      * 
      * @type {string}
-     * @memberof Hotel
+     * @memberof CreateHotel
      */
     'name'?: string | null;
     /**
      * 
-     * @type {string}
-     * @memberof Hotel
+     * @type {LocationDto}
+     * @memberof CreateHotel
      */
-    'locationId'?: string | null;
+    'location'?: LocationDto;
     /**
      * 
      * @type {string}
-     * @memberof Hotel
+     * @memberof CreateHotel
      */
-    'createdAt'?: string | null;
+    'createdBy'?: string | null;
 }
 /**
  * 
  * @export
- * @interface Transshipment
+ * @interface CreatePromotion
  */
-export interface Transshipment {
+export interface CreatePromotion {
+    /**
+     * 
+     * @type {number}
+     * @memberof CreatePromotion
+     */
+    'hotelId'?: number;
     /**
      * 
      * @type {string}
-     * @memberof Transshipment
+     * @memberof CreatePromotion
      */
-    'id'?: string;
+    'rateType'?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof Transshipment
+     * @memberof CreatePromotion
      */
-    'shipmentId'?: string | null;
+    'description'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreatePromotion
+     */
+    'duration'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreatePromotion
+     */
+    'promotionalPrice'?: number;
     /**
      * 
      * @type {string}
-     * @memberof Transshipment
+     * @memberof CreatePromotion
      */
-    'status'?: string | null;
+    'startDate'?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePromotion
+     */
+    'endDate'?: string;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreatePromotion
+     */
+    'status'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePromotion
+     */
+    'createdBy'?: string | null;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof CreatePromotion
+     */
+    'serviceIds'?: Array<number> | null;
 }
 /**
  * 
  * @export
- * @interface TransshipmentDto
+ * @interface CreateRate
  */
-export interface TransshipmentDto {
+export interface CreateRate {
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateRate
+     */
+    'hotelId'?: number;
     /**
      * 
      * @type {string}
-     * @memberof TransshipmentDto
+     * @memberof CreateRate
      */
-    'shipmentId'?: string | null;
+    'rateType'?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof TransshipmentDto
+     * @memberof CreateRate
      */
-    'status'?: string | null;
+    'description'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateRate
+     */
+    'duration'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateRate
+     */
+    'price'?: number;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateRate
+     */
+    'status'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateRate
+     */
+    'createdBy'?: string | null;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof CreateRate
+     */
+    'serviceIds'?: Array<number> | null;
+}
+/**
+ * 
+ * @export
+ * @interface CreateReview
+ */
+export interface CreateReview {
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateReview
+     */
+    'hotelId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateReview
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateReview
+     */
+    'rating'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateReview
+     */
+    'author'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateReview
+     */
+    'createdBy'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface LocationDto
+ */
+export interface LocationDto {
+    /**
+     * 
+     * @type {string}
+     * @memberof LocationDto
+     */
+    'city'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof LocationDto
+     */
+    'district'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof LocationDto
+     */
+    'street'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateHotel
+ */
+export interface UpdateHotel {
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateHotel
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateHotel
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {LocationDto}
+     * @memberof UpdateHotel
+     */
+    'location'?: LocationDto;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateHotel
+     */
+    'updatedBy'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface UpdatePromotion
+ */
+export interface UpdatePromotion {
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdatePromotion
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdatePromotion
+     */
+    'rateType'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdatePromotion
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdatePromotion
+     */
+    'duration'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdatePromotion
+     */
+    'promotionalPrice'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdatePromotion
+     */
+    'startDate'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdatePromotion
+     */
+    'endDate'?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdatePromotion
+     */
+    'status'?: boolean | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdatePromotion
+     */
+    'updatedBy'?: string | null;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof UpdatePromotion
+     */
+    'serviceIds'?: Array<number> | null;
+}
+/**
+ * 
+ * @export
+ * @interface UpdateRate
+ */
+export interface UpdateRate {
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateRate
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateRate
+     */
+    'rateType'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateRate
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateRate
+     */
+    'duration'?: number | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateRate
+     */
+    'price'?: number | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof UpdateRate
+     */
+    'status'?: boolean | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateRate
+     */
+    'updatedBy'?: string | null;
+    /**
+     * 
+     * @type {Array<number>}
+     * @memberof UpdateRate
+     */
+    'serviceIds'?: Array<number> | null;
 }
 
 /**
@@ -101,109 +394,12 @@ export const HotelApiAxiosParamCreator = function (configuration?: Configuration
     return {
         /**
          * 
+         * @param {CreateHotel} [createHotel] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        hotelGetAllHotels: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createHotel: async (createHotel?: CreateHotel, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Hotel`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-
-            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-
-    
-            setSearchParams(localVarUrlObj, localVarQueryParameter);
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: toPathString(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-    }
-};
-
-/**
- * HotelApi - functional programming interface
- * @export
- */
-export const HotelApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = HotelApiAxiosParamCreator(configuration)
-    return {
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async hotelGetAllHotels(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Hotel>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.hotelGetAllHotels(options);
-            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['HotelApi.hotelGetAllHotels']?.[localVarOperationServerIndex]?.url;
-            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
-        },
-    }
-};
-
-/**
- * HotelApi - factory interface
- * @export
- */
-export const HotelApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = HotelApiFp(configuration)
-    return {
-        /**
-         * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        hotelGetAllHotels(options?: RawAxiosRequestConfig): AxiosPromise<Array<Hotel>> {
-            return localVarFp.hotelGetAllHotels(options).then((request) => request(axios, basePath));
-        },
-    };
-};
-
-/**
- * HotelApi - object-oriented interface
- * @export
- * @class HotelApi
- * @extends {BaseAPI}
- */
-export class HotelApi extends BaseAPI {
-    /**
-     * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof HotelApi
-     */
-    public hotelGetAllHotels(options?: RawAxiosRequestConfig) {
-        return HotelApiFp(this.configuration).hotelGetAllHotels(options).then((request) => request(this.axios, this.basePath));
-    }
-}
-
-
-
-/**
- * TransshipmentApi - axios parameter creator
- * @export
- */
-export const TransshipmentApiAxiosParamCreator = function (configuration?: Configuration) {
-    return {
-        /**
-         * 
-         * @param {TransshipmentDto} [transshipmentDto] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        transshipmentCreateTransshipment: async (transshipmentDto?: TransshipmentDto, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Transshipment`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -222,7 +418,7 @@ export const TransshipmentApiAxiosParamCreator = function (configuration?: Confi
             setSearchParams(localVarUrlObj, localVarQueryParameter);
             let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
             localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-            localVarRequestOptions.data = serializeDataIfNeeded(transshipmentDto, localVarRequestOptions, configuration)
+            localVarRequestOptions.data = serializeDataIfNeeded(createHotel, localVarRequestOptions, configuration)
 
             return {
                 url: toPathString(localVarUrlObj),
@@ -231,11 +427,15 @@ export const TransshipmentApiAxiosParamCreator = function (configuration?: Confi
         },
         /**
          * 
+         * @param {number} hotelId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        transshipmentGetAllTransshipments: async (options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/Transshipment`;
+        getHotelById: async (hotelId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hotelId' is not null or undefined
+            assertParamExists('getHotelById', 'hotelId', hotelId)
+            const localVarPath = `/api/Hotel/{hotelId}`
+                .replace(`{${"hotelId"}}`, encodeURIComponent(String(hotelId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -260,15 +460,15 @@ export const TransshipmentApiAxiosParamCreator = function (configuration?: Confi
         },
         /**
          * 
-         * @param {string} id 
+         * @param {number} hotelId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        transshipmentSelectTrans: async (id: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'id' is not null or undefined
-            assertParamExists('transshipmentSelectTrans', 'id', id)
-            const localVarPath = `/api/Transshipment/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+        getHotelImages: async (hotelId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hotelId' is not null or undefined
+            assertParamExists('getHotelImages', 'hotelId', hotelId)
+            const localVarPath = `/api/Hotel/{hotelId}/images`
+                .replace(`{${"hotelId"}}`, encodeURIComponent(String(hotelId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
             let baseOptions;
@@ -291,127 +491,903 @@ export const TransshipmentApiAxiosParamCreator = function (configuration?: Confi
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {string} [name] 
+         * @param {string} [city] 
+         * @param {string} [district] 
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listHotels: async (name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Hotel`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (name !== undefined) {
+                localVarQueryParameter['Name'] = name;
+            }
+
+            if (city !== undefined) {
+                localVarQueryParameter['City'] = city;
+            }
+
+            if (district !== undefined) {
+                localVarQueryParameter['District'] = district;
+            }
+
+            if (minPrice !== undefined) {
+                localVarQueryParameter['MinPrice'] = minPrice;
+            }
+
+            if (maxPrice !== undefined) {
+                localVarQueryParameter['MaxPrice'] = maxPrice;
+            }
+
+            if (pageNumber !== undefined) {
+                localVarQueryParameter['PageNumber'] = pageNumber;
+            }
+
+            if (pageSize !== undefined) {
+                localVarQueryParameter['PageSize'] = pageSize;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {UpdateHotel} [updateHotel] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateHotel: async (updateHotel?: UpdateHotel, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Hotel`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateHotel, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} hotelId 
+         * @param {Array<File>} [files] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadHotelImages: async (hotelId: number, files?: Array<File>, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'hotelId' is not null or undefined
+            assertParamExists('uploadHotelImages', 'hotelId', hotelId)
+            const localVarPath = `/api/Hotel/{hotelId}/upload-images`
+                .replace(`{${"hotelId"}}`, encodeURIComponent(String(hotelId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+            const localVarFormParams = new ((configuration && configuration.formDataCtor) || FormData)();
+
+            if (files) {
+                files.forEach((element) => {
+                    localVarFormParams.append('files', element as any);
+                })
+            }
+
+    
+    
+            localVarHeaderParameter['Content-Type'] = 'multipart/form-data';
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = localVarFormParams;
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
 /**
- * TransshipmentApi - functional programming interface
+ * HotelApi - functional programming interface
  * @export
  */
-export const TransshipmentApiFp = function(configuration?: Configuration) {
-    const localVarAxiosParamCreator = TransshipmentApiAxiosParamCreator(configuration)
+export const HotelApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = HotelApiAxiosParamCreator(configuration)
     return {
         /**
          * 
-         * @param {TransshipmentDto} [transshipmentDto] 
+         * @param {CreateHotel} [createHotel] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async transshipmentCreateTransshipment(transshipmentDto?: TransshipmentDto, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Transshipment>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.transshipmentCreateTransshipment(transshipmentDto, options);
+        async createHotel(createHotel?: CreateHotel, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createHotel(createHotel, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TransshipmentApi.transshipmentCreateTransshipment']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['HotelApi.createHotel']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
+         * @param {number} hotelId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async transshipmentGetAllTransshipments(options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Array<Transshipment>>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.transshipmentGetAllTransshipments(options);
+        async getHotelById(hotelId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getHotelById(hotelId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TransshipmentApi.transshipmentGetAllTransshipments']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['HotelApi.getHotelById']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
         /**
          * 
-         * @param {string} id 
+         * @param {number} hotelId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async transshipmentSelectTrans(id: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<Transshipment>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.transshipmentSelectTrans(id, options);
+        async getHotelImages(hotelId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.getHotelImages(hotelId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
-            const localVarOperationServerBasePath = operationServerMap['TransshipmentApi.transshipmentSelectTrans']?.[localVarOperationServerIndex]?.url;
+            const localVarOperationServerBasePath = operationServerMap['HotelApi.getHotelImages']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {string} [name] 
+         * @param {string} [city] 
+         * @param {string} [district] 
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listHotels(name, city, district, minPrice, maxPrice, pageNumber, pageSize, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HotelApi.listHotels']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {UpdateHotel} [updateHotel] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateHotel(updateHotel?: UpdateHotel, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateHotel(updateHotel, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HotelApi.updateHotel']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} hotelId 
+         * @param {Array<File>} [files] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async uploadHotelImages(hotelId: number, files?: Array<File>, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.uploadHotelImages(hotelId, files, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['HotelApi.uploadHotelImages']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
         },
     }
 };
 
 /**
- * TransshipmentApi - factory interface
+ * HotelApi - factory interface
  * @export
  */
-export const TransshipmentApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
-    const localVarFp = TransshipmentApiFp(configuration)
+export const HotelApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = HotelApiFp(configuration)
     return {
         /**
          * 
-         * @param {TransshipmentDto} [transshipmentDto] 
+         * @param {CreateHotel} [createHotel] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        transshipmentCreateTransshipment(transshipmentDto?: TransshipmentDto, options?: RawAxiosRequestConfig): AxiosPromise<Transshipment> {
-            return localVarFp.transshipmentCreateTransshipment(transshipmentDto, options).then((request) => request(axios, basePath));
+        createHotel(createHotel?: CreateHotel, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.createHotel(createHotel, options).then((request) => request(axios, basePath));
         },
         /**
          * 
+         * @param {number} hotelId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        transshipmentGetAllTransshipments(options?: RawAxiosRequestConfig): AxiosPromise<Array<Transshipment>> {
-            return localVarFp.transshipmentGetAllTransshipments(options).then((request) => request(axios, basePath));
+        getHotelById(hotelId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.getHotelById(hotelId, options).then((request) => request(axios, basePath));
         },
         /**
          * 
-         * @param {string} id 
+         * @param {number} hotelId 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        transshipmentSelectTrans(id: string, options?: RawAxiosRequestConfig): AxiosPromise<Transshipment> {
-            return localVarFp.transshipmentSelectTrans(id, options).then((request) => request(axios, basePath));
+        getHotelImages(hotelId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.getHotelImages(hotelId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {string} [name] 
+         * @param {string} [city] 
+         * @param {string} [district] 
+         * @param {number} [minPrice] 
+         * @param {number} [maxPrice] 
+         * @param {number} [pageNumber] 
+         * @param {number} [pageSize] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.listHotels(name, city, district, minPrice, maxPrice, pageNumber, pageSize, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {UpdateHotel} [updateHotel] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateHotel(updateHotel?: UpdateHotel, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.updateHotel(updateHotel, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} hotelId 
+         * @param {Array<File>} [files] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        uploadHotelImages(hotelId: number, files?: Array<File>, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.uploadHotelImages(hotelId, files, options).then((request) => request(axios, basePath));
         },
     };
 };
 
 /**
- * TransshipmentApi - object-oriented interface
+ * HotelApi - object-oriented interface
  * @export
- * @class TransshipmentApi
+ * @class HotelApi
  * @extends {BaseAPI}
  */
-export class TransshipmentApi extends BaseAPI {
+export class HotelApi extends BaseAPI {
     /**
      * 
-     * @param {TransshipmentDto} [transshipmentDto] 
+     * @param {CreateHotel} [createHotel] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TransshipmentApi
+     * @memberof HotelApi
      */
-    public transshipmentCreateTransshipment(transshipmentDto?: TransshipmentDto, options?: RawAxiosRequestConfig) {
-        return TransshipmentApiFp(this.configuration).transshipmentCreateTransshipment(transshipmentDto, options).then((request) => request(this.axios, this.basePath));
+    public createHotel(createHotel?: CreateHotel, options?: RawAxiosRequestConfig) {
+        return HotelApiFp(this.configuration).createHotel(createHotel, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
+     * @param {number} hotelId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TransshipmentApi
+     * @memberof HotelApi
      */
-    public transshipmentGetAllTransshipments(options?: RawAxiosRequestConfig) {
-        return TransshipmentApiFp(this.configuration).transshipmentGetAllTransshipments(options).then((request) => request(this.axios, this.basePath));
+    public getHotelById(hotelId: number, options?: RawAxiosRequestConfig) {
+        return HotelApiFp(this.configuration).getHotelById(hotelId, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**
      * 
-     * @param {string} id 
+     * @param {number} hotelId 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
-     * @memberof TransshipmentApi
+     * @memberof HotelApi
      */
-    public transshipmentSelectTrans(id: string, options?: RawAxiosRequestConfig) {
-        return TransshipmentApiFp(this.configuration).transshipmentSelectTrans(id, options).then((request) => request(this.axios, this.basePath));
+    public getHotelImages(hotelId: number, options?: RawAxiosRequestConfig) {
+        return HotelApiFp(this.configuration).getHotelImages(hotelId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {string} [name] 
+     * @param {string} [city] 
+     * @param {string} [district] 
+     * @param {number} [minPrice] 
+     * @param {number} [maxPrice] 
+     * @param {number} [pageNumber] 
+     * @param {number} [pageSize] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HotelApi
+     */
+    public listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
+        return HotelApiFp(this.configuration).listHotels(name, city, district, minPrice, maxPrice, pageNumber, pageSize, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UpdateHotel} [updateHotel] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HotelApi
+     */
+    public updateHotel(updateHotel?: UpdateHotel, options?: RawAxiosRequestConfig) {
+        return HotelApiFp(this.configuration).updateHotel(updateHotel, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} hotelId 
+     * @param {Array<File>} [files] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof HotelApi
+     */
+    public uploadHotelImages(hotelId: number, files?: Array<File>, options?: RawAxiosRequestConfig) {
+        return HotelApiFp(this.configuration).uploadHotelImages(hotelId, files, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * PromotionApi - axios parameter creator
+ * @export
+ */
+export const PromotionApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {CreatePromotion} [createPromotion] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createPromotion: async (createPromotion?: CreatePromotion, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Promotion`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createPromotion, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {UpdatePromotion} [updatePromotion] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updatePromotion: async (updatePromotion?: UpdatePromotion, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Promotion`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updatePromotion, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * PromotionApi - functional programming interface
+ * @export
+ */
+export const PromotionApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = PromotionApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {CreatePromotion} [createPromotion] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createPromotion(createPromotion?: CreatePromotion, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createPromotion(createPromotion, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PromotionApi.createPromotion']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {UpdatePromotion} [updatePromotion] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updatePromotion(updatePromotion?: UpdatePromotion, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updatePromotion(updatePromotion, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['PromotionApi.updatePromotion']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * PromotionApi - factory interface
+ * @export
+ */
+export const PromotionApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = PromotionApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {CreatePromotion} [createPromotion] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createPromotion(createPromotion?: CreatePromotion, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.createPromotion(createPromotion, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {UpdatePromotion} [updatePromotion] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updatePromotion(updatePromotion?: UpdatePromotion, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.updatePromotion(updatePromotion, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * PromotionApi - object-oriented interface
+ * @export
+ * @class PromotionApi
+ * @extends {BaseAPI}
+ */
+export class PromotionApi extends BaseAPI {
+    /**
+     * 
+     * @param {CreatePromotion} [createPromotion] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PromotionApi
+     */
+    public createPromotion(createPromotion?: CreatePromotion, options?: RawAxiosRequestConfig) {
+        return PromotionApiFp(this.configuration).createPromotion(createPromotion, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UpdatePromotion} [updatePromotion] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PromotionApi
+     */
+    public updatePromotion(updatePromotion?: UpdatePromotion, options?: RawAxiosRequestConfig) {
+        return PromotionApiFp(this.configuration).updatePromotion(updatePromotion, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * RateApi - axios parameter creator
+ * @export
+ */
+export const RateApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {CreateRate} [createRate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRate: async (createRate?: CreateRate, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Rate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createRate, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {UpdateRate} [updateRate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateRate: async (updateRate?: UpdateRate, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Rate`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateRate, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * RateApi - functional programming interface
+ * @export
+ */
+export const RateApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = RateApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateRate} [createRate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createRate(createRate?: CreateRate, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createRate(createRate, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RateApi.createRate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {UpdateRate} [updateRate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateRate(updateRate?: UpdateRate, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateRate(updateRate, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['RateApi.updateRate']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * RateApi - factory interface
+ * @export
+ */
+export const RateApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = RateApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateRate} [createRate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createRate(createRate?: CreateRate, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.createRate(createRate, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {UpdateRate} [updateRate] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateRate(updateRate?: UpdateRate, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.updateRate(updateRate, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * RateApi - object-oriented interface
+ * @export
+ * @class RateApi
+ * @extends {BaseAPI}
+ */
+export class RateApi extends BaseAPI {
+    /**
+     * 
+     * @param {CreateRate} [createRate] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RateApi
+     */
+    public createRate(createRate?: CreateRate, options?: RawAxiosRequestConfig) {
+        return RateApiFp(this.configuration).createRate(createRate, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UpdateRate} [updateRate] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof RateApi
+     */
+    public updateRate(updateRate?: UpdateRate, options?: RawAxiosRequestConfig) {
+        return RateApiFp(this.configuration).updateRate(updateRate, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
+
+/**
+ * ReviewApi - axios parameter creator
+ * @export
+ */
+export const ReviewApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {CreateReview} [createReview] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createReview: async (createReview?: CreateReview, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Review`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createReview, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} reviewId 
+         * @param {string} [deletedBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteReview: async (reviewId: number, deletedBy?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'reviewId' is not null or undefined
+            assertParamExists('deleteReview', 'reviewId', reviewId)
+            const localVarPath = `/api/Review/{reviewId}`
+                .replace(`{${"reviewId"}}`, encodeURIComponent(String(reviewId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            if (deletedBy !== undefined) {
+                localVarQueryParameter['deletedBy'] = deletedBy;
+            }
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ReviewApi - functional programming interface
+ * @export
+ */
+export const ReviewApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ReviewApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateReview} [createReview] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createReview(createReview?: CreateReview, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createReview(createReview, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ReviewApi.createReview']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} reviewId 
+         * @param {string} [deletedBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteReview(reviewId: number, deletedBy?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteReview(reviewId, deletedBy, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ReviewApi.deleteReview']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * ReviewApi - factory interface
+ * @export
+ */
+export const ReviewApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ReviewApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateReview} [createReview] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createReview(createReview?: CreateReview, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.createReview(createReview, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} reviewId 
+         * @param {string} [deletedBy] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteReview(reviewId: number, deletedBy?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteReview(reviewId, deletedBy, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ReviewApi - object-oriented interface
+ * @export
+ * @class ReviewApi
+ * @extends {BaseAPI}
+ */
+export class ReviewApi extends BaseAPI {
+    /**
+     * 
+     * @param {CreateReview} [createReview] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewApi
+     */
+    public createReview(createReview?: CreateReview, options?: RawAxiosRequestConfig) {
+        return ReviewApiFp(this.configuration).createReview(createReview, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} reviewId 
+     * @param {string} [deletedBy] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ReviewApi
+     */
+    public deleteReview(reviewId: number, deletedBy?: string, options?: RawAxiosRequestConfig) {
+        return ReviewApiFp(this.configuration).deleteReview(reviewId, deletedBy, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

@@ -47,21 +47,23 @@ builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen(c =>
 {
-    // Configuración de Swagger
+    // Configuración básica de Swagger
     c.SwaggerDoc("v1", new OpenApiInfo
     {
         Title = "TeloApi",
         Version = "v1"
     });
 
+    // Habilitar anotaciones de Swagger
+    c.EnableAnnotations();
+
     // Configuración para definir OperationId
     c.CustomOperationIds(apiDesc =>
     {
         // Usa el nombre del controlador + método de la acción para definir OperationId
-        return apiDesc.ActionDescriptor.RouteValues["controller"] + "_" + apiDesc.ActionDescriptor.RouteValues["action"];
+        return apiDesc.ActionDescriptor.RouteValues["action"];
     });
 });
-
 var app = builder.Build();
 
 // Usa CORS

@@ -8,21 +8,21 @@ namespace TeloApi.Features.Hotel.Controller;
 [Route("api/[controller]")]
 public class HotelController(IHotelService hotelService) : ControllerBase
 {
-    [HttpPost]
+    [HttpPost(Name="CreateHotel")]
     public async Task<IActionResult> CreateHotel([FromBody] CreateHotel request)
     {
         var result = await hotelService.CreateHotelAsync(request);
         return Ok(result);
     }
 
-    [HttpPut]
+    [HttpPut(Name = "UpdateHotel")]
     public async Task<IActionResult> UpdateHotel([FromBody] UpdateHotel request)
     {
         var result = await hotelService.UpdateHotelAsync(request);
         return Ok(result);
     }
 
-    [HttpGet("{hotelId}")]
+    [HttpGet("{hotelId}", Name = "GetHotelById")]
     public async Task<IActionResult> GetHotelById(int hotelId)
     {
         var result = await hotelService.GetHotelByIdAsync(hotelId);
@@ -31,14 +31,14 @@ public class HotelController(IHotelService hotelService) : ControllerBase
         return Ok(result);
     }
 
-    [HttpPost("{hotelId}/upload-images")]
+    [HttpPost("{hotelId}/upload-images", Name = "UploadHotelImages")]
     public async Task<IActionResult> UploadHotelImages(int hotelId, [FromForm] List<IFormFile> files)
     {
         var result = await hotelService.UploadHotelImagesAsync(hotelId, files);
         return Ok(result);
     }
 
-    [HttpGet("{hotelId}/images")]
+    [HttpGet("{hotelId}/images", Name = "GetHotelImages")]
     public async Task<IActionResult> GetHotelImages(int hotelId)
     {
         var images = await hotelService.GetHotelImagesAsync(hotelId);
@@ -48,7 +48,7 @@ public class HotelController(IHotelService hotelService) : ControllerBase
         return Ok(images);
     }
     
-    [HttpGet]
+    [HttpGet(Name = "ListHotels")]
     public async Task<IActionResult> ListHotels([FromQuery] HotelsRequest request)
     {
         if (request.PageNumber <= 0 || request.PageSize <= 0)
