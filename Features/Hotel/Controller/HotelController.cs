@@ -47,4 +47,14 @@ public class HotelController(IHotelService hotelService) : ControllerBase
 
         return Ok(images);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> ListHotels([FromQuery] HotelsRequest request)
+    {
+        if (request.PageNumber <= 0 || request.PageSize <= 0)
+            return BadRequest("PageNumber and PageSize must be greater than zero.");
+
+        var result = await hotelService.ListHotelsAsync(request);
+        return Ok(result);
+    }
 }

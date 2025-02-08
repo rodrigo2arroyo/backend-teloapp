@@ -1,46 +1,40 @@
 using Microsoft.EntityFrameworkCore;
 using TeloApi.Contexts;
+using TeloApi.Features.Hotel.DTOs;
 
 namespace TeloApi.Features.Hotel.Repositories;
 using Models;
 
-public class HotelRepository : IHotelRepository
+public class HotelRepository(AppDbContext context) : IHotelRepository
 {
-    private readonly AppDbContext _context;
-
-    public HotelRepository(AppDbContext context)
-    {
-        _context = context;
-    }
-
     public async Task AddHotelImagesAsync(List<HotelImage> images)
     {
-        await _context.HotelImages.AddRangeAsync(images);
-        await _context.SaveChangesAsync();
+        await context.HotelImages.AddRangeAsync(images);
+        await context.SaveChangesAsync();
     }
 
     public async Task<List<HotelImage>> GetHotelImagesAsync(int hotelId)
     {
-        return await _context.HotelImages.Where(i => i.HotelId == hotelId).ToListAsync();
+        return await context.HotelImages.Where(i => i.HotelId == hotelId).ToListAsync();
     }
     
     public async Task<Hotel> CreateHotelAsync(Hotel hotel)
     {
-        await _context.Hotels.AddAsync(hotel);
-        await _context.SaveChangesAsync();
+        await context.Hotels.AddAsync(hotel);
+        await context.SaveChangesAsync();
         return hotel;
     }
 
     public async Task<Hotel> UpdateHotelAsync(Hotel hotel)
     {
-        _context.Hotels.Update(hotel);
-        await _context.SaveChangesAsync();
+        context.Hotels.Update(hotel);
+        await context.SaveChangesAsync();
         return hotel;
     }
 
     public async Task<Hotel> GetHotelByIdWithDetailsAsync(int hotelId)
     {
-        return await _context.Hotels
+        return await context.Hotels
             .Include(h => h.Location)
             .Include(h => h.Rates)
             .ThenInclude(r => r.ServiceRates)
@@ -50,5 +44,49 @@ public class HotelRepository : IHotelRepository
             .ThenInclude(sp => sp.Service)
             .Include(h => h.Reviews)
             .FirstOrDefaultAsync(h => h.Id == hotelId);
+    }
+    
+    public async Task<(List<Hotel>, int)> GetHotelsAsync(HotelsRequest filters)
+    {
+        var query = context.Hotels
+            .Include(h => h.Location)
+            .Include(h => h.Rates)
+            .ThenInclude(r => r.ServiceRates)
+            .ThenInclude(sr => sr.Service)
+            .Include(h => h.Promotions)
+            .ThenInclude(p => p.ServicePromotions)
+            .ThenInclude(sp => sp.Service)
+            .Include(h => h.Reviews)
+            .Include(h => h.HotelImages)
+            .AsQueryable();
+
+        // Aplicar filtros
+        if (!string.IsNullOrEmpty(filters.Name))
+            query = query.Where(h => EF.Functions.Like(h.Name, $"%{filters.Name}%"));
+
+        if (!string.IsNullOrEmpty(filters.City))
+            query = query.Where(h => h.Location.City == filters.City);
+
+        if (!string.IsNullOrEmpty(filters.District))
+            query = query.Where(h => h.Location.District == filters.District);
+
+        if (filters.MinPrice.HasValue)
+            query = query.Where(h => h.Rates.Any(r => r.Price >= filters.MinPrice.Value));
+
+        if (filters.MaxPrice.HasValue)
+            query = query.Where(h => h.Rates.Any(r => r.Price <= filters.MaxPrice.Value));
+
+        // Contar el total de resultados antes de aplicar la paginación
+        var totalCount = await query.CountAsync();
+
+        // Aplicar paginación obligatoria
+        query = query
+            .Skip((filters.PageNumber - 1) * filters.PageSize)
+            .Take(filters.PageSize);
+
+        // Ejecutar la consulta
+        var hotels = await query.ToListAsync();
+
+        return (hotels, totalCount);
     }
 }

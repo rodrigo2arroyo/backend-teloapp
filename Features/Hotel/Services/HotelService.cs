@@ -7,15 +7,8 @@ using TeloApi.Shared;
 namespace TeloApi.Features.Hotel.Services;
 using Models;
 
-public class HotelService : IHotelService
+public class HotelService(IHotelRepository hotelRepository) : IHotelService
 {
-    private readonly IHotelRepository _hotelRepository;
-
-    public HotelService(IHotelRepository hotelRepository)
-    {
-        _hotelRepository = hotelRepository;
-    }
-
     public async Task<GenericResponse> UploadHotelImagesAsync(int hotelId, List<IFormFile> files)
     {
         if (files == null || files.Count == 0)
@@ -49,14 +42,14 @@ public class HotelService : IHotelService
             });
         }
 
-        await _hotelRepository.AddHotelImagesAsync(uploadedImages);
+        await hotelRepository.AddHotelImagesAsync(uploadedImages);
 
         return new GenericResponse { Message = "Images uploaded successfully." };
     }
 
     public async Task<List<string>> GetHotelImagesAsync(int hotelId)
     {
-        var images = await _hotelRepository.GetHotelImagesAsync(hotelId);
+        var images = await hotelRepository.GetHotelImagesAsync(hotelId);
         return images.Select(i => i.ImageUrl).ToList();
     }
     
@@ -74,14 +67,14 @@ public class HotelService : IHotelService
             CreatedBy = request.CreatedBy
         };
 
-        var createdHotel = await _hotelRepository.CreateHotelAsync(hotel);
+        var createdHotel = await hotelRepository.CreateHotelAsync(hotel);
 
         return new GenericResponse { Id = createdHotel.Id, Message = "Hotel created successfully." };
     }
 
     public async Task<GenericResponse> UpdateHotelAsync(UpdateHotel request)
     {
-        var hotel = await _hotelRepository.GetHotelByIdWithDetailsAsync(request.Id);
+        var hotel = await hotelRepository.GetHotelByIdWithDetailsAsync(request.Id);
         if (hotel == null)
             return new GenericResponse { Message = "Hotel not found." };
 
@@ -91,14 +84,14 @@ public class HotelService : IHotelService
         hotel.Location.Street = request.Location.Street;
         hotel.UpdatedBy = request.UpdatedBy;
 
-        var updatedHotel = await _hotelRepository.UpdateHotelAsync(hotel);
+        var updatedHotel = await hotelRepository.UpdateHotelAsync(hotel);
 
         return new GenericResponse { Id = updatedHotel.Id, Message = "Hotel updated successfully." };
     }
 
     public async Task<HotelResponse> GetHotelByIdAsync(int hotelId)
     {
-        var hotel = await _hotelRepository.GetHotelByIdWithDetailsAsync(hotelId);
+        var hotel = await hotelRepository.GetHotelByIdWithDetailsAsync(hotelId);
         Trace.WriteLine(hotel);
         if (hotel == null) return null;
 
@@ -142,6 +135,59 @@ public class HotelService : IHotelService
                 Description = r.Description,
                 Rating = 0
             }).ToList()
+        };
+    }
+    
+    public async Task<HotelsResponse> ListHotelsAsync(HotelsRequest request)
+    {
+        var (hotels, totalCount) = await hotelRepository.GetHotelsAsync(request);
+
+        var hotelResponses = hotels.Select(h => new HotelResponse
+        {
+            Id = h.Id,
+            Name = h.Name,
+            Location = new LocationDto
+            {
+                City = h.Location.City,
+                District = h.Location.District,
+                Street = h.Location.Street
+            },
+            Rates = h.Rates.Select(r => new RateResponse
+            {
+                Id = r.Id,
+                RateType = r.RateType,
+                Description = r.Description,
+                Price = r.Price,
+                Services = r.ServiceRates.Select(sr => new ServiceResponse
+                {
+                    Id = sr.Service.Id,
+                    Name = sr.Service.Name
+                }).ToList()
+            }).ToList(),
+            Promotions = h.Promotions.Select(p => new PromotionResponse
+            {
+                Id = p.Id,
+                Description = p.Description,
+                PromotionalPrice = p.PromotionalPrice,
+                Services = p.ServicePromotions.Select(sp => new ServiceResponse
+                {
+                    Id = sp.Service.Id,
+                    Name = sp.Service.Name
+                }).ToList()
+            }).ToList(),
+            Reviews = h.Reviews.Select(r => new ReviewResponse
+            {
+                Id = r.Id,
+                Author = r.Author,
+                Description = r.Description,
+                Rating = 0
+            }).ToList()
+        }).ToList();
+
+        return new HotelsResponse
+        {
+            Hotels = hotelResponses,
+            TotalCount = totalCount
         };
     }
 }

@@ -10,4 +10,6 @@ public interface IHotelService
     Task<HotelResponse> GetHotelByIdAsync(int hotelId);
     Task<GenericResponse> UploadHotelImagesAsync(int hotelId, List<IFormFile> files);
     Task<List<string>> GetHotelImagesAsync(int hotelId);
+    
+    Task<HotelsResponse> ListHotelsAsync(HotelsRequest request);
 }
