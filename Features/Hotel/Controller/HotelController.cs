@@ -49,6 +49,8 @@ public class HotelController(IHotelService hotelService) : ControllerBase
     }
     
     [HttpGet(Name = "ListHotels")]
+    [ProducesResponseType(typeof(HotelsResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> ListHotels([FromQuery] HotelsRequest request)
     {
         if (request.PageNumber <= 0 || request.PageSize <= 0)

@@ -138,7 +138,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
         };
     }
     
-    public async Task<HotelsResponse> ListHotelsAsync(HotelsRequest request)
+    public async Task<HotelsResult> ListHotelsAsync(HotelsRequest request)
     {
         var (hotels, totalCount) = await hotelRepository.GetHotelsAsync(request);
 
@@ -184,7 +184,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             }).ToList()
         }).ToList();
 
-        return new HotelsResponse
+        return new HotelsResult
         {
             Hotels = hotelResponses,
             TotalCount = totalCount
