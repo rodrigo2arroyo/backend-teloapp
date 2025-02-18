@@ -181,7 +181,8 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
                 Author = r.Author,
                 Description = r.Description,
                 Rating = 0
-            }).ToList()
+            }).ToList(),
+            Images = h.HotelImages.Select(img => img.ImageUrl).ToList() // 👈 Agregamos las imágenes
         }).ToList();
 
         return new HotelsResult

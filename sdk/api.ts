@@ -210,6 +210,74 @@ export interface CreateReview {
 /**
  * 
  * @export
+ * @interface HotelResponse
+ */
+export interface HotelResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof HotelResponse
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof HotelResponse
+     */
+    'name'?: string | null;
+    /**
+     * 
+     * @type {LocationDto}
+     * @memberof HotelResponse
+     */
+    'location'?: LocationDto;
+    /**
+     * 
+     * @type {Array<RateResponse>}
+     * @memberof HotelResponse
+     */
+    'rates'?: Array<RateResponse> | null;
+    /**
+     * 
+     * @type {Array<PromotionResponse>}
+     * @memberof HotelResponse
+     */
+    'promotions'?: Array<PromotionResponse> | null;
+    /**
+     * 
+     * @type {Array<ReviewResponse>}
+     * @memberof HotelResponse
+     */
+    'reviews'?: Array<ReviewResponse> | null;
+    /**
+     * 
+     * @type {Array<string>}
+     * @memberof HotelResponse
+     */
+    'images'?: Array<string> | null;
+}
+/**
+ * 
+ * @export
+ * @interface HotelsResult
+ */
+export interface HotelsResult {
+    /**
+     * Lista de hoteles disponibles
+     * @type {Array<HotelResponse>}
+     * @memberof HotelsResult
+     */
+    'hotels'?: Array<HotelResponse> | null;
+    /**
+     * Número total de hoteles
+     * @type {number}
+     * @memberof HotelsResult
+     */
+    'totalCount'?: number;
+}
+/**
+ * 
+ * @export
  * @interface LocationDto
  */
 export interface LocationDto {
@@ -231,6 +299,163 @@ export interface LocationDto {
      * @memberof LocationDto
      */
     'street'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface ProblemDetails
+ */
+export interface ProblemDetails {
+    [key: string]: any;
+
+    /**
+     * 
+     * @type {string}
+     * @memberof ProblemDetails
+     */
+    'type'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProblemDetails
+     */
+    'title'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ProblemDetails
+     */
+    'status'?: number | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProblemDetails
+     */
+    'detail'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ProblemDetails
+     */
+    'instance'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface PromotionResponse
+ */
+export interface PromotionResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof PromotionResponse
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof PromotionResponse
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof PromotionResponse
+     */
+    'promotionalPrice'?: number;
+    /**
+     * 
+     * @type {Array<ServiceResponse>}
+     * @memberof PromotionResponse
+     */
+    'services'?: Array<ServiceResponse> | null;
+}
+/**
+ * 
+ * @export
+ * @interface RateResponse
+ */
+export interface RateResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof RateResponse
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof RateResponse
+     */
+    'rateType'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof RateResponse
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof RateResponse
+     */
+    'price'?: number;
+    /**
+     * 
+     * @type {Array<ServiceResponse>}
+     * @memberof RateResponse
+     */
+    'services'?: Array<ServiceResponse> | null;
+}
+/**
+ * 
+ * @export
+ * @interface ReviewResponse
+ */
+export interface ReviewResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof ReviewResponse
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReviewResponse
+     */
+    'author'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ReviewResponse
+     */
+    'description'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof ReviewResponse
+     */
+    'rating'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface ServiceResponse
+ */
+export interface ServiceResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof ServiceResponse
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ServiceResponse
+     */
+    'name'?: string | null;
 }
 /**
  * 
@@ -690,7 +915,7 @@ export const HotelApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+        async listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HotelsResult>> {
             const localVarAxiosArgs = await localVarAxiosParamCreator.listHotels(name, city, district, minPrice, maxPrice, pageNumber, pageSize, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HotelApi.listHotels']?.[localVarOperationServerIndex]?.url;
@@ -770,7 +995,7 @@ export const HotelApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+        listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): AxiosPromise<HotelsResult> {
             return localVarFp.listHotels(name, city, district, minPrice, maxPrice, pageNumber, pageSize, options).then((request) => request(axios, basePath));
         },
         /**

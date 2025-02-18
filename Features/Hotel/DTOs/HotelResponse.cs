@@ -9,6 +9,7 @@ public class HotelResponse
     public List<RateResponse> Rates { get; set; }
     public List<PromotionResponse> Promotions { get; set; }
     public List<ReviewResponse> Reviews { get; set; }
+    public List<string> Images { get; set; } = new List<string>();
 }
 
 public class RateResponse
