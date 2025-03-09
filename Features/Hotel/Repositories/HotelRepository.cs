@@ -43,6 +43,7 @@ public class HotelRepository(AppDbContext context) : IHotelRepository
             .ThenInclude(p => p.ServicePromotions)
             .ThenInclude(sp => sp.Service)
             .Include(h => h.Reviews)
+            .Include(h => h.HotelImages)
             .FirstOrDefaultAsync(h => h.Id == hotelId);
     }
     

@@ -111,6 +111,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
                 RateType = r.RateType,
                 Description = r.Description,
                 Price = r.Price,
+                Duration = r.Duration,
                 Services = r.ServiceRates.Select(sr => new ServiceResponse
                 {
                     Id = sr.Service.Id,
@@ -120,8 +121,10 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             Promotions = hotel.Promotions.Select(p => new PromotionResponse
             {
                 Id = p.Id,
+                RateType = p.RateType,
                 Description = p.Description,
                 PromotionalPrice = p.PromotionalPrice,
+                Duration = p.Duration,
                 Services = p.ServicePromotions.Select(sp => new ServiceResponse
                 {
                     Id = sp.Service.Id,
@@ -134,7 +137,8 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
                 Author = r.Author,
                 Description = r.Description,
                 Rating = 0
-            }).ToList()
+            }).ToList(),
+            Images = hotel.HotelImages.Select(img => img.ImageUrl).ToList()
         };
     }
     
@@ -158,6 +162,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
                 RateType = r.RateType,
                 Description = r.Description,
                 Price = r.Price,
+                Duration = r.Duration,
                 Services = r.ServiceRates.Select(sr => new ServiceResponse
                 {
                     Id = sr.Service.Id,
@@ -167,8 +172,10 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             Promotions = h.Promotions.Select(p => new PromotionResponse
             {
                 Id = p.Id,
+                RateType = p.RateType,
                 Description = p.Description,
                 PromotionalPrice = p.PromotionalPrice,
+                Duration = p.Duration,
                 Services = p.ServicePromotions.Select(sp => new ServiceResponse
                 {
                     Id = sp.Service.Id,

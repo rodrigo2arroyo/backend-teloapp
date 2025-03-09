@@ -356,6 +356,12 @@ export interface PromotionResponse {
      * @type {string}
      * @memberof PromotionResponse
      */
+    'rateType'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof PromotionResponse
+     */
     'description'?: string | null;
     /**
      * 
@@ -363,6 +369,12 @@ export interface PromotionResponse {
      * @memberof PromotionResponse
      */
     'promotionalPrice'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof PromotionResponse
+     */
+    'duration'?: number;
     /**
      * 
      * @type {Array<ServiceResponse>}
@@ -400,6 +412,12 @@ export interface RateResponse {
      * @memberof RateResponse
      */
     'price'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof RateResponse
+     */
+    'duration'?: number;
     /**
      * 
      * @type {Array<ServiceResponse>}
