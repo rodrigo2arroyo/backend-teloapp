@@ -44,6 +44,7 @@ public class HotelRepository(AppDbContext context) : IHotelRepository
             .ThenInclude(sp => sp.Service)
             .Include(h => h.Reviews)
             .Include(h => h.HotelImages)
+            .Include(h => h.Contacts)
             .FirstOrDefaultAsync(h => h.Id == hotelId);
     }
     
@@ -59,6 +60,7 @@ public class HotelRepository(AppDbContext context) : IHotelRepository
             .ThenInclude(sp => sp.Service)
             .Include(h => h.Reviews)
             .Include(h => h.HotelImages)
+            .Include(h => h.Contacts)
             .AsQueryable();
 
         // Aplicar filtros

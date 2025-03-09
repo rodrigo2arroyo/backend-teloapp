@@ -13,5 +13,5 @@ public interface IReviewService
     /// <summary>
     /// Elimina (soft delete) una reseña existente por su ID.
     /// </summary>
-    Task<GenericResponse> DeleteReviewAsync(int reviewId, string deletedBy);
+    Task<GenericResponse> DeleteReviewAsync(int reviewId);
 }

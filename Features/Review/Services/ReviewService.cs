@@ -32,7 +32,7 @@ public class ReviewService : IReviewService
         return new GenericResponse { Id = createdReview.Id, Message = "Review created successfully." };
     }
 
-    public async Task<GenericResponse> DeleteReviewAsync(int reviewId, string deletedBy)
+    public async Task<GenericResponse> DeleteReviewAsync(int reviewId)
     {
         var isDeleted = await _reviewRepository.DeleteReviewAsync(reviewId);
         if (!isDeleted)

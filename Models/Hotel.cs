@@ -21,6 +21,10 @@ public partial class Hotel
 
     public string? UpdatedBy { get; set; }
 
+    public string? Description { get; set; }
+
+    public virtual ICollection<Contact> Contacts { get; set; } = new List<Contact>();
+
     public virtual ICollection<HotelImage> HotelImages { get; set; } = new List<HotelImage>();
 
     public virtual Location? Location { get; set; }

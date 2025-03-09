@@ -6,15 +6,8 @@ namespace TeloApi.Features.Review.Controller;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ReviewController : ControllerBase
+public class ReviewController(IReviewService reviewService) : ControllerBase
 {
-    private readonly IReviewService _reviewService;
-
-    public ReviewController(IReviewService reviewService)
-    {
-        _reviewService = reviewService;
-    }
-
     /// <summary>
     /// Crear una nueva reseña para un hotel.
     /// </summary>
@@ -23,7 +16,7 @@ public class ReviewController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateReview([FromBody] CreateReview request)
     {
-        var result = await _reviewService.CreateReviewAsync(request);
+        var result = await reviewService.CreateReviewAsync(request);
         return Ok(result);
     }
 
@@ -34,9 +27,9 @@ public class ReviewController : ControllerBase
     /// <param name="deletedBy">Quién está realizando la eliminación.</param>
     /// <returns>Resultado de la eliminación.</returns>
     [HttpDelete("{reviewId}")]
-    public async Task<IActionResult> DeleteReview(int reviewId, [FromQuery] string deletedBy)
+    public async Task<IActionResult> DeleteReview(int reviewId)
     {
-        var result = await _reviewService.DeleteReviewAsync(reviewId, deletedBy);
+        var result = await reviewService.DeleteReviewAsync(reviewId);
         return Ok(result);
     }
 }

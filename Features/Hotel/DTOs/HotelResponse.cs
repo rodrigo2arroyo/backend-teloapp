@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TeloApi.Features.Hotel.DTOs;
+using TeloApi.Models;
 
 public class HotelResponse
 {
@@ -9,6 +10,7 @@ public class HotelResponse
     public List<RateResponse> Rates { get; set; }
     public List<PromotionResponse> Promotions { get; set; }
     public List<ReviewResponse> Reviews { get; set; }
+    public List<ContactResponse> Contacts { get; set; }
     public List<string> Images { get; set; } = new List<string>();
 }
 
@@ -44,4 +46,14 @@ public class ServiceResponse
 {
     public int Id { get; set; }
     public string Name { get; set; }
+}
+
+public class ContactResponse
+{
+    public int Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public string Email { get; set; }
+    public string Phone { get; set; }
+    public string CountryCode { get; set; }
 }

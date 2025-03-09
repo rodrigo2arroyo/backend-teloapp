@@ -42,7 +42,7 @@ public class RateService(IRateRepository rateRepository) : IRateService
             Duration = request.Duration ?? 0,
             Price = request.Price ?? 0,
             Status = request.Status ?? true,
-            UpdatedBy = request.UpdatedBy
+            UpdatedBy = request.UpdatedBy,
         });
 
         await rateRepository.RemoveAllServicesFromRateAsync(request.Id);

@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TeloApi.Contexts;
+using TeloApi.Features.Contact.Repositories;
+using TeloApi.Features.Contact.Services;
 using TeloApi.Features.Hotel.Repositories;
 using TeloApi.Features.Hotel.Services;
 using TeloApi.Features.Promotion.Repositories;
@@ -32,7 +34,8 @@ builder.Services.AddScoped<IHotelService, HotelService>();
 builder.Services.AddScoped<IHotelRepository, HotelRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
-
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
+builder.Services.AddScoped<IContactService, ContactService>();
 
 // Otros servicios como controllers y swagger
 builder.Services.AddControllers()

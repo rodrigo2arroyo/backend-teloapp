@@ -109,7 +109,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             {
                 Id = r.Id,
                 RateType = r.RateType,
-                Description = r.Description,
+                Description = r.Description?? "",
                 Price = r.Price,
                 Duration = r.Duration,
                 Services = r.ServiceRates.Select(sr => new ServiceResponse
@@ -122,7 +122,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             {
                 Id = p.Id,
                 RateType = p.RateType,
-                Description = p.Description,
+                Description = p.Description?? "",
                 PromotionalPrice = p.PromotionalPrice,
                 Duration = p.Duration,
                 Services = p.ServicePromotions.Select(sp => new ServiceResponse
@@ -134,11 +134,20 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             Reviews = hotel.Reviews.Select(r => new ReviewResponse
             {
                 Id = r.Id,
-                Author = r.Author,
+                Author = r.Author?? "",
                 Description = r.Description,
-                Rating = 0
+                Rating = r.Rating?? 0,
             }).ToList(),
-            Images = hotel.HotelImages.Select(img => img.ImageUrl).ToList()
+            Images = hotel.HotelImages.Select(img => img.ImageUrl).ToList(),
+            Contacts = hotel.Contacts.Select(c => new ContactResponse
+            {
+                Id = c.Id,
+                FirstName = c.Firstname,
+                LastName = c.Lastname,
+                Phone = c.Phone,
+                CountryCode = c.CountryCode??  "",
+                Email = c.Email?? "",
+            }).ToList()
         };
     }
     
@@ -189,7 +198,16 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
                 Description = r.Description,
                 Rating = 0
             }).ToList(),
-            Images = h.HotelImages.Select(img => img.ImageUrl).ToList() // 👈 Agregamos las imágenes
+            Images = h.HotelImages.Select(img => img.ImageUrl).ToList(),
+            Contacts = h.Contacts.Select(c => new ContactResponse
+            {
+                Id = c.Id,
+                FirstName = c.Firstname,
+                LastName = c.Lastname,
+                Phone = c.Phone,
+                CountryCode = c.CountryCode??  "",
+                Email = c.Email?? "",
+            }).ToList()
         }).ToList();
 
         return new HotelsResult

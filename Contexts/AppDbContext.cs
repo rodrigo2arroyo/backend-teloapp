@@ -16,6 +16,8 @@ public partial class AppDbContext : DbContext
     {
     }
 
+    public virtual DbSet<Contact> Contacts { get; set; }
+
     public virtual DbSet<District> Districts { get; set; }
 
     public virtual DbSet<Hotel> Hotels { get; set; }
@@ -42,6 +44,34 @@ public partial class AppDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<Contact>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__Contact__3214EC076BFC41CD");
+
+            entity.ToTable("Contact");
+
+            entity.Property(e => e.CountryCode).HasMaxLength(20);
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.CreatedBy)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.Email).HasMaxLength(30);
+            entity.Property(e => e.Firstname).HasMaxLength(50);
+            entity.Property(e => e.Lastname).HasMaxLength(50);
+            entity.Property(e => e.Phone).HasMaxLength(20);
+            entity.Property(e => e.Status).HasDefaultValue(true);
+            entity.Property(e => e.UpdatedAt).HasColumnType("datetime");
+            entity.Property(e => e.UpdatedBy)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Hotel).WithMany(p => p.Contacts)
+                .HasForeignKey(d => d.HotelId)
+                .HasConstraintName("FK__Contact__HotelId__51300E55");
+        });
+
         modelBuilder.Entity<District>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PK__District__3214EC070EEBE44F");
@@ -64,6 +94,7 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.CreatedBy)
                 .HasMaxLength(100)
                 .IsUnicode(false);
+            entity.Property(e => e.Description).HasMaxLength(1000);
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false);
