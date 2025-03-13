@@ -58,6 +58,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
         var hotel = new Hotel
         {
             Name = request.Name,
+            Description = request.Description,
             Location = new Location
             {
                 City = request.Location.City,
@@ -99,6 +100,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
         {
             Id = hotel.Id,
             Name = hotel.Name,
+            Description = hotel.Description!,
             Location = new LocationDto
             {
                 City = hotel.Location.City,
@@ -159,6 +161,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
         {
             Id = h.Id,
             Name = h.Name,
+            Description = h.Description!,
             Location = new LocationDto
             {
                 City = h.Location.City,

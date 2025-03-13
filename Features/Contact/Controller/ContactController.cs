@@ -23,7 +23,7 @@ public class ContactController(IContactService contactService) : ControllerBase
     }
     
     [HttpDelete("{contactId}")]
-    public async Task<IActionResult> DeleteReview(int contactId)
+    public async Task<IActionResult> DeleteContact(int contactId)
     {
         var result = await contactService.DeleteContact(contactId);
         return Ok(result);

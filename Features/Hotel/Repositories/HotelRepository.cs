@@ -63,26 +63,36 @@ public class HotelRepository(AppDbContext context) : IHotelRepository
             .Include(h => h.Contacts)
             .AsQueryable();
 
-        // Aplicar filtros
-        if (!string.IsNullOrEmpty(filters.Name))
-            query = query.Where(h => EF.Functions.Like(h.Name, $"%{filters.Name}%"));
+        // Filtrar por nombres con coincidencias parciales
+        if (filters.Names != null && filters.Names.Any())
+        {
+            query = query.Where(h => filters.Names.Any(name => h.Name.Contains(name)));
+        }
 
-        if (!string.IsNullOrEmpty(filters.City))
-            query = query.Where(h => h.Location.City == filters.City);
+        // Filtrar por ciudades con coincidencias parciales
+        if (filters.Cities != null && filters.Cities.Any())
+        {
+            query = query.Where(h => filters.Cities.Any(city => h.Location.City.Contains(city)));
+        }
 
-        if (!string.IsNullOrEmpty(filters.District))
-            query = query.Where(h => h.Location.District == filters.District);
+        // Filtrar por distritos con coincidencias parciales
+        if (filters.Districts != null && filters.Districts.Any())
+        {
+            query = query.Where(h => filters.Districts.Any(district => h.Location.District.Contains(district)));
+        }
 
+        // Filtrar por precio mínimo
         if (filters.MinPrice.HasValue)
             query = query.Where(h => h.Rates.Any(r => r.Price >= filters.MinPrice.Value));
 
+        // Filtrar por precio máximo
         if (filters.MaxPrice.HasValue)
             query = query.Where(h => h.Rates.Any(r => r.Price <= filters.MaxPrice.Value));
 
-        // Contar el total de resultados antes de aplicar la paginación
+        // Contar el total de resultados antes de la paginación
         var totalCount = await query.CountAsync();
 
-        // Aplicar paginación obligatoria
+        // Aplicar paginación
         query = query
             .Skip((filters.PageNumber - 1) * filters.PageSize)
             .Take(filters.PageSize);

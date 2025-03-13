@@ -26,6 +26,104 @@ import { BASE_PATH, COLLECTION_FORMATS, BaseAPI, RequiredError, operationServerM
 /**
  * 
  * @export
+ * @interface ContactResponse
+ */
+export interface ContactResponse {
+    /**
+     * 
+     * @type {number}
+     * @memberof ContactResponse
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof ContactResponse
+     */
+    'firstName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ContactResponse
+     */
+    'lastName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ContactResponse
+     */
+    'email'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ContactResponse
+     */
+    'phone'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof ContactResponse
+     */
+    'countryCode'?: string | null;
+}
+/**
+ * 
+ * @export
+ * @interface CreateContact
+ */
+export interface CreateContact {
+    /**
+     * 
+     * @type {number}
+     * @memberof CreateContact
+     */
+    'hotelId'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateContact
+     */
+    'firstName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateContact
+     */
+    'lastName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateContact
+     */
+    'email'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateContact
+     */
+    'phone'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateContact
+     */
+    'countryCode'?: string | null;
+    /**
+     * 
+     * @type {boolean}
+     * @memberof CreateContact
+     */
+    'status'?: boolean;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateContact
+     */
+    'createdBy'?: string | null;
+}
+/**
+ * 
+ * @export
  * @interface CreateHotel
  */
 export interface CreateHotel {
@@ -35,6 +133,12 @@ export interface CreateHotel {
      * @memberof CreateHotel
      */
     'name'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreateHotel
+     */
+    'description'?: string | null;
     /**
      * 
      * @type {LocationDto}
@@ -249,6 +353,12 @@ export interface HotelResponse {
      * @memberof HotelResponse
      */
     'reviews'?: Array<ReviewResponse> | null;
+    /**
+     * 
+     * @type {Array<ContactResponse>}
+     * @memberof HotelResponse
+     */
+    'contacts'?: Array<ContactResponse> | null;
     /**
      * 
      * @type {Array<string>}
@@ -478,6 +588,55 @@ export interface ServiceResponse {
 /**
  * 
  * @export
+ * @interface UpdateContact
+ */
+export interface UpdateContact {
+    /**
+     * 
+     * @type {number}
+     * @memberof UpdateContact
+     */
+    'id'?: number;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateContact
+     */
+    'firstName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateContact
+     */
+    'lastName'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateContact
+     */
+    'email'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateContact
+     */
+    'phone'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateContact
+     */
+    'countryCode'?: string | null;
+    /**
+     * 
+     * @type {string}
+     * @memberof UpdateContact
+     */
+    'updatedBy'?: string | null;
+}
+/**
+ * 
+ * @export
  * @interface UpdateHotel
  */
 export interface UpdateHotel {
@@ -628,6 +787,240 @@ export interface UpdateRate {
      */
     'serviceIds'?: Array<number> | null;
 }
+
+/**
+ * ContactApi - axios parameter creator
+ * @export
+ */
+export const ContactApiAxiosParamCreator = function (configuration?: Configuration) {
+    return {
+        /**
+         * 
+         * @param {CreateContact} [createContact] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createContact: async (createContact?: CreateContact, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Contact`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'POST', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(createContact, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} contactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteContact: async (contactId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'contactId' is not null or undefined
+            assertParamExists('deleteContact', 'contactId', contactId)
+            const localVarPath = `/api/Contact/{contactId}`
+                .replace(`{${"contactId"}}`, encodeURIComponent(String(contactId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {UpdateContact} [updateContact] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateContact: async (updateContact?: UpdateContact, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+            const localVarPath = `/api/Contact`;
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+
+            const localVarRequestOptions = { method: 'PUT', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+
+    
+            localVarHeaderParameter['Content-Type'] = 'application/json';
+
+            setSearchParams(localVarUrlObj, localVarQueryParameter);
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+            localVarRequestOptions.data = serializeDataIfNeeded(updateContact, localVarRequestOptions, configuration)
+
+            return {
+                url: toPathString(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+    }
+};
+
+/**
+ * ContactApi - functional programming interface
+ * @export
+ */
+export const ContactApiFp = function(configuration?: Configuration) {
+    const localVarAxiosParamCreator = ContactApiAxiosParamCreator(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateContact} [createContact] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async createContact(createContact?: CreateContact, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.createContact(createContact, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ContactApi.createContact']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {number} contactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async deleteContact(contactId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteContact(contactId, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ContactApi.deleteContact']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+        /**
+         * 
+         * @param {UpdateContact} [updateContact] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async updateContact(updateContact?: UpdateContact, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.updateContact(updateContact, options);
+            const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
+            const localVarOperationServerBasePath = operationServerMap['ContactApi.updateContact']?.[localVarOperationServerIndex]?.url;
+            return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
+        },
+    }
+};
+
+/**
+ * ContactApi - factory interface
+ * @export
+ */
+export const ContactApiFactory = function (configuration?: Configuration, basePath?: string, axios?: AxiosInstance) {
+    const localVarFp = ContactApiFp(configuration)
+    return {
+        /**
+         * 
+         * @param {CreateContact} [createContact] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        createContact(createContact?: CreateContact, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.createContact(createContact, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {number} contactId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        deleteContact(contactId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteContact(contactId, options).then((request) => request(axios, basePath));
+        },
+        /**
+         * 
+         * @param {UpdateContact} [updateContact] 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        updateContact(updateContact?: UpdateContact, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.updateContact(updateContact, options).then((request) => request(axios, basePath));
+        },
+    };
+};
+
+/**
+ * ContactApi - object-oriented interface
+ * @export
+ * @class ContactApi
+ * @extends {BaseAPI}
+ */
+export class ContactApi extends BaseAPI {
+    /**
+     * 
+     * @param {CreateContact} [createContact] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ContactApi
+     */
+    public createContact(createContact?: CreateContact, options?: RawAxiosRequestConfig) {
+        return ContactApiFp(this.configuration).createContact(createContact, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {number} contactId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ContactApi
+     */
+    public deleteContact(contactId: number, options?: RawAxiosRequestConfig) {
+        return ContactApiFp(this.configuration).deleteContact(contactId, options).then((request) => request(this.axios, this.basePath));
+    }
+
+    /**
+     * 
+     * @param {UpdateContact} [updateContact] 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof ContactApi
+     */
+    public updateContact(updateContact?: UpdateContact, options?: RawAxiosRequestConfig) {
+        return ContactApiFp(this.configuration).updateContact(updateContact, options).then((request) => request(this.axios, this.basePath));
+    }
+}
+
+
 
 /**
  * HotelApi - axios parameter creator
@@ -1501,11 +1894,10 @@ export const ReviewApiAxiosParamCreator = function (configuration?: Configuratio
         /**
          * 
          * @param {number} reviewId 
-         * @param {string} [deletedBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteReview: async (reviewId: number, deletedBy?: string, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        deleteReview: async (reviewId: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'reviewId' is not null or undefined
             assertParamExists('deleteReview', 'reviewId', reviewId)
             const localVarPath = `/api/Review/{reviewId}`
@@ -1520,10 +1912,6 @@ export const ReviewApiAxiosParamCreator = function (configuration?: Configuratio
             const localVarRequestOptions = { method: 'DELETE', ...baseOptions, ...options};
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
-
-            if (deletedBy !== undefined) {
-                localVarQueryParameter['deletedBy'] = deletedBy;
-            }
 
 
     
@@ -1561,12 +1949,11 @@ export const ReviewApiFp = function(configuration?: Configuration) {
         /**
          * 
          * @param {number} reviewId 
-         * @param {string} [deletedBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async deleteReview(reviewId: number, deletedBy?: string, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteReview(reviewId, deletedBy, options);
+        async deleteReview(reviewId: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<void>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.deleteReview(reviewId, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['ReviewApi.deleteReview']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1593,12 +1980,11 @@ export const ReviewApiFactory = function (configuration?: Configuration, basePat
         /**
          * 
          * @param {number} reviewId 
-         * @param {string} [deletedBy] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        deleteReview(reviewId: number, deletedBy?: string, options?: RawAxiosRequestConfig): AxiosPromise<void> {
-            return localVarFp.deleteReview(reviewId, deletedBy, options).then((request) => request(axios, basePath));
+        deleteReview(reviewId: number, options?: RawAxiosRequestConfig): AxiosPromise<void> {
+            return localVarFp.deleteReview(reviewId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -1624,13 +2010,12 @@ export class ReviewApi extends BaseAPI {
     /**
      * 
      * @param {number} reviewId 
-     * @param {string} [deletedBy] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof ReviewApi
      */
-    public deleteReview(reviewId: number, deletedBy?: string, options?: RawAxiosRequestConfig) {
-        return ReviewApiFp(this.configuration).deleteReview(reviewId, deletedBy, options).then((request) => request(this.axios, this.basePath));
+    public deleteReview(reviewId: number, options?: RawAxiosRequestConfig) {
+        return ReviewApiFp(this.configuration).deleteReview(reviewId, options).then((request) => request(this.axios, this.basePath));
     }
 }
 

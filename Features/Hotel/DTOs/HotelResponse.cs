@@ -6,6 +6,8 @@ public class HotelResponse
 {
     public int Id { get; set; }
     public string Name { get; set; }
+    
+    public string Description { get; set; }
     public LocationDto Location { get; set; }
     public List<RateResponse> Rates { get; set; }
     public List<PromotionResponse> Promotions { get; set; }

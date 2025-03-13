@@ -24,7 +24,6 @@ public class ReviewController(IReviewService reviewService) : ControllerBase
     /// Eliminar (soft delete) una reseña.
     /// </summary>
     /// <param name="reviewId">ID de la reseña a eliminar.</param>
-    /// <param name="deletedBy">Quién está realizando la eliminación.</param>
     /// <returns>Resultado de la eliminación.</returns>
     [HttpDelete("{reviewId}")]
     public async Task<IActionResult> DeleteReview(int reviewId)
