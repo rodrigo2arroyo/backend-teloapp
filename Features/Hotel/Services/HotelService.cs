@@ -1,9 +1,9 @@
 using System.Diagnostics;
 using System.Text.Json;
-using System.Xml;
 using TeloApi.Features.Hotel.DTOs;
 using TeloApi.Features.Hotel.Repositories;
 using TeloApi.Shared;
+using DotNetEnv;
 
 namespace TeloApi.Features.Hotel.Services;
 using Models;
@@ -12,7 +12,10 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
 {
     private async Task<(string City, string District, string Street)> GetAddressFromCoordinates(decimal latitude, decimal longitude)
     {
-        string apiKey = "AIzaSyA2chYWKgVTrdHe4sdLdEpNILAYDC5wUuI";
+        Env.Load();
+        string apiKey = Environment.GetEnvironmentVariable("GOOGLE_MAPS_API_KEY");
+        if (string.IsNullOrEmpty(apiKey)) throw new Exception("Google Maps API Key is missing. Make sure it's set in the .env file.");
+        
         string url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={apiKey}";
 
         using (var httpClient = new HttpClient())
@@ -126,8 +129,6 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
         var images = await hotelRepository.GetHotelImagesAsync(hotelId);
         return images.Select(i => i.ImageUrl).ToList();
     }
-    
-    
 
     public async Task<GenericResponse> UpdateHotelAsync(UpdateHotel request)
     {
@@ -156,9 +157,11 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             Description = hotel.Description!,
             Location = new LocationResponse
             {
-                City = hotel.Location.City,
+                City = hotel.Location!.City,
                 District = hotel.Location.District,
-                Street = hotel.Location.Street
+                Street = hotel.Location.Street,
+                Latitude = hotel.Location.Latitude,
+                Longitude = hotel.Location.Longitude,
             },
             Rates = hotel.Rates.Select(r => new RateResponse
             {
@@ -219,7 +222,9 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             {
                 City = h.Location.City,
                 District = h.Location.District,
-                Street = h.Location.Street
+                Street = h.Location.Street,
+                Latitude = h.Location.Latitude,
+                Longitude = h.Location.Longitude,
             },
             Rates = h.Rates.Select(r => new RateResponse
             {
