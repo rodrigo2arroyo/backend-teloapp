@@ -143,6 +143,8 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.District)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.Latitude).HasColumnType("decimal(10, 6)");
+            entity.Property(e => e.Longitude).HasColumnType("decimal(10, 6)");
             entity.Property(e => e.Status).HasDefaultValue(true);
             entity.Property(e => e.Street)
                 .HasMaxLength(255)

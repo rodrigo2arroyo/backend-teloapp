@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Text.Json;
 using System.Xml;
 using TeloApi.Features.Hotel.DTOs;
 using TeloApi.Features.Hotel.Repositories;
@@ -9,6 +10,79 @@ using Models;
 
 public class HotelService(IHotelRepository hotelRepository) : IHotelService
 {
+    private async Task<(string City, string District, string Street)> GetAddressFromCoordinates(decimal latitude, decimal longitude)
+    {
+        string apiKey = "AIzaSyA2chYWKgVTrdHe4sdLdEpNILAYDC5wUuI";
+        string url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={apiKey}";
+
+        using (var httpClient = new HttpClient())
+        {
+            var response = await httpClient.GetStringAsync(url);
+            var data = JsonSerializer.Deserialize<GoogleGeocodingResponse>(response);
+
+            if (data != null && data.Results.Any())
+            {
+                var bestResult = data.Results.FirstOrDefault();
+                var addressComponents = bestResult.AddressComponents;
+
+                string city = "";
+                string district = "";
+                string streetName = "";
+                string streetNumber = "";
+
+                // Recorrer todos los addressComponents para obtener cada dato
+                foreach (var component in addressComponents)
+                {
+                    if (component.Types.Contains("locality"))
+                    {
+                        district = component.LongName; // Ciudad
+                    }
+                    else if (component.Types.Contains("administrative_area_level_2"))
+                    {
+                        city = component.LongName; // Distrito
+                    }
+                    else if (component.Types.Contains("route"))
+                    {
+                        streetName = component.LongName; // Nombre de la calle
+                    }
+                    else if (component.Types.Contains("street_number"))
+                    {
+                        streetNumber = component.LongName; // Número de la calle
+                    }
+                }
+
+                // Concatenar Calle + Número (si existe número)
+                string street = !string.IsNullOrEmpty(streetNumber) ? $"{streetName} {streetNumber}" : streetName;
+
+                return (city, district, street);
+            }
+        }
+
+        return ("", "", "");
+    }
+    public async Task<GenericResponse> CreateHotelAsync(CreateHotel request)
+    {
+        var (city, district, street) = await GetAddressFromCoordinates(request.Location.Latitude, request.Location.Longitude);
+
+        var hotel = new Hotel
+        {
+            Name = request.Name,
+            Description = request.Description,
+            Location = new Location
+            {
+                City = city,
+                District = district,
+                Street = street,
+                Longitude = request.Location.Longitude,
+                Latitude = request.Location.Latitude,
+            },
+            CreatedBy = request.CreatedBy
+        };
+
+        var createdHotel = await hotelRepository.CreateHotelAsync(hotel);
+
+        return new GenericResponse { Id = createdHotel.Id, Message = "Hotel created successfully." };
+    }
     public async Task<GenericResponse> UploadHotelImagesAsync(int hotelId, List<IFormFile> files)
     {
         if (files == null || files.Count == 0)
@@ -53,25 +127,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
         return images.Select(i => i.ImageUrl).ToList();
     }
     
-    public async Task<GenericResponse> CreateHotelAsync(CreateHotel request)
-    {
-        var hotel = new Hotel
-        {
-            Name = request.Name,
-            Description = request.Description,
-            Location = new Location
-            {
-                City = request.Location.City,
-                District = request.Location.District,
-                Street = request.Location.Street
-            },
-            CreatedBy = request.CreatedBy
-        };
-
-        var createdHotel = await hotelRepository.CreateHotelAsync(hotel);
-
-        return new GenericResponse { Id = createdHotel.Id, Message = "Hotel created successfully." };
-    }
+    
 
     public async Task<GenericResponse> UpdateHotelAsync(UpdateHotel request)
     {
@@ -80,9 +136,6 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             return new GenericResponse { Message = "Hotel not found." };
 
         hotel.Name = request.Name;
-        hotel.Location.City = request.Location.City;
-        hotel.Location.District = request.Location.District;
-        hotel.Location.Street = request.Location.Street;
         hotel.UpdatedBy = request.UpdatedBy;
 
         var updatedHotel = await hotelRepository.UpdateHotelAsync(hotel);
@@ -101,7 +154,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             Id = hotel.Id,
             Name = hotel.Name,
             Description = hotel.Description!,
-            Location = new LocationDto
+            Location = new LocationResponse
             {
                 City = hotel.Location.City,
                 District = hotel.Location.District,
@@ -162,7 +215,7 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             Id = h.Id,
             Name = h.Name,
             Description = h.Description!,
-            Location = new LocationDto
+            Location = new LocationResponse
             {
                 City = h.Location.City,
                 District = h.Location.District,

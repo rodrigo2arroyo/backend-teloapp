@@ -141,10 +141,10 @@ export interface CreateHotel {
     'description'?: string | null;
     /**
      * 
-     * @type {LocationDto}
+     * @type {LocationRequest}
      * @memberof CreateHotel
      */
-    'location'?: LocationDto;
+    'location'?: LocationRequest;
     /**
      * 
      * @type {string}
@@ -331,10 +331,16 @@ export interface HotelResponse {
     'name'?: string | null;
     /**
      * 
-     * @type {LocationDto}
+     * @type {string}
      * @memberof HotelResponse
      */
-    'location'?: LocationDto;
+    'description'?: string | null;
+    /**
+     * 
+     * @type {LocationResponse}
+     * @memberof HotelResponse
+     */
+    'location'?: LocationResponse;
     /**
      * 
      * @type {Array<RateResponse>}
@@ -388,27 +394,58 @@ export interface HotelsResult {
 /**
  * 
  * @export
- * @interface LocationDto
+ * @interface LocationRequest
  */
-export interface LocationDto {
+export interface LocationRequest {
+    /**
+     * 
+     * @type {number}
+     * @memberof LocationRequest
+     */
+    'latitude'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LocationRequest
+     */
+    'longitude'?: number;
+}
+/**
+ * 
+ * @export
+ * @interface LocationResponse
+ */
+export interface LocationResponse {
     /**
      * 
      * @type {string}
-     * @memberof LocationDto
+     * @memberof LocationResponse
      */
     'city'?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof LocationDto
+     * @memberof LocationResponse
      */
     'district'?: string | null;
     /**
      * 
      * @type {string}
-     * @memberof LocationDto
+     * @memberof LocationResponse
      */
     'street'?: string | null;
+    /**
+     * 
+     * @type {number}
+     * @memberof LocationResponse
+     */
+    'longitude'?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof LocationResponse
+     */
+    'latitude'?: number;
 }
 /**
  * 
@@ -654,10 +691,10 @@ export interface UpdateHotel {
     'name'?: string | null;
     /**
      * 
-     * @type {LocationDto}
+     * @type {LocationResponse}
      * @memberof UpdateHotel
      */
-    'location'?: LocationDto;
+    'location'?: LocationResponse;
     /**
      * 
      * @type {string}
@@ -1129,9 +1166,9 @@ export const HotelApiAxiosParamCreator = function (configuration?: Configuration
         },
         /**
          * 
-         * @param {string} [name] 
-         * @param {string} [city] 
-         * @param {string} [district] 
+         * @param {Array<string>} [names] 
+         * @param {Array<string>} [cities] 
+         * @param {Array<string>} [districts] 
          * @param {number} [minPrice] 
          * @param {number} [maxPrice] 
          * @param {number} [pageNumber] 
@@ -1139,7 +1176,7 @@ export const HotelApiAxiosParamCreator = function (configuration?: Configuration
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listHotels: async (name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
+        listHotels: async (names?: Array<string>, cities?: Array<string>, districts?: Array<string>, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options: RawAxiosRequestConfig = {}): Promise<RequestArgs> => {
             const localVarPath = `/api/Hotel`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, DUMMY_BASE_URL);
@@ -1152,16 +1189,16 @@ export const HotelApiAxiosParamCreator = function (configuration?: Configuration
             const localVarHeaderParameter = {} as any;
             const localVarQueryParameter = {} as any;
 
-            if (name !== undefined) {
-                localVarQueryParameter['Name'] = name;
+            if (names) {
+                localVarQueryParameter['Names'] = names;
             }
 
-            if (city !== undefined) {
-                localVarQueryParameter['City'] = city;
+            if (cities) {
+                localVarQueryParameter['Cities'] = cities;
             }
 
-            if (district !== undefined) {
-                localVarQueryParameter['District'] = district;
+            if (districts) {
+                localVarQueryParameter['Districts'] = districts;
             }
 
             if (minPrice !== undefined) {
@@ -1316,9 +1353,9 @@ export const HotelApiFp = function(configuration?: Configuration) {
         },
         /**
          * 
-         * @param {string} [name] 
-         * @param {string} [city] 
-         * @param {string} [district] 
+         * @param {Array<string>} [names] 
+         * @param {Array<string>} [cities] 
+         * @param {Array<string>} [districts] 
          * @param {number} [minPrice] 
          * @param {number} [maxPrice] 
          * @param {number} [pageNumber] 
@@ -1326,8 +1363,8 @@ export const HotelApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HotelsResult>> {
-            const localVarAxiosArgs = await localVarAxiosParamCreator.listHotels(name, city, district, minPrice, maxPrice, pageNumber, pageSize, options);
+        async listHotels(names?: Array<string>, cities?: Array<string>, districts?: Array<string>, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => AxiosPromise<HotelsResult>> {
+            const localVarAxiosArgs = await localVarAxiosParamCreator.listHotels(names, cities, districts, minPrice, maxPrice, pageNumber, pageSize, options);
             const localVarOperationServerIndex = configuration?.serverIndex ?? 0;
             const localVarOperationServerBasePath = operationServerMap['HotelApi.listHotels']?.[localVarOperationServerIndex]?.url;
             return (axios, basePath) => createRequestFunction(localVarAxiosArgs, globalAxios, BASE_PATH, configuration)(axios, localVarOperationServerBasePath || basePath);
@@ -1396,9 +1433,9 @@ export const HotelApiFactory = function (configuration?: Configuration, basePath
         },
         /**
          * 
-         * @param {string} [name] 
-         * @param {string} [city] 
-         * @param {string} [district] 
+         * @param {Array<string>} [names] 
+         * @param {Array<string>} [cities] 
+         * @param {Array<string>} [districts] 
          * @param {number} [minPrice] 
          * @param {number} [maxPrice] 
          * @param {number} [pageNumber] 
@@ -1406,8 +1443,8 @@ export const HotelApiFactory = function (configuration?: Configuration, basePath
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): AxiosPromise<HotelsResult> {
-            return localVarFp.listHotels(name, city, district, minPrice, maxPrice, pageNumber, pageSize, options).then((request) => request(axios, basePath));
+        listHotels(names?: Array<string>, cities?: Array<string>, districts?: Array<string>, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig): AxiosPromise<HotelsResult> {
+            return localVarFp.listHotels(names, cities, districts, minPrice, maxPrice, pageNumber, pageSize, options).then((request) => request(axios, basePath));
         },
         /**
          * 
@@ -1473,9 +1510,9 @@ export class HotelApi extends BaseAPI {
 
     /**
      * 
-     * @param {string} [name] 
-     * @param {string} [city] 
-     * @param {string} [district] 
+     * @param {Array<string>} [names] 
+     * @param {Array<string>} [cities] 
+     * @param {Array<string>} [districts] 
      * @param {number} [minPrice] 
      * @param {number} [maxPrice] 
      * @param {number} [pageNumber] 
@@ -1484,8 +1521,8 @@ export class HotelApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof HotelApi
      */
-    public listHotels(name?: string, city?: string, district?: string, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
-        return HotelApiFp(this.configuration).listHotels(name, city, district, minPrice, maxPrice, pageNumber, pageSize, options).then((request) => request(this.axios, this.basePath));
+    public listHotels(names?: Array<string>, cities?: Array<string>, districts?: Array<string>, minPrice?: number, maxPrice?: number, pageNumber?: number, pageSize?: number, options?: RawAxiosRequestConfig) {
+        return HotelApiFp(this.configuration).listHotels(names, cities, districts, minPrice, maxPrice, pageNumber, pageSize, options).then((request) => request(this.axios, this.basePath));
     }
 
     /**

@@ -8,7 +8,7 @@ public class HotelResponse
     public string Name { get; set; }
     
     public string Description { get; set; }
-    public LocationDto Location { get; set; }
+    public LocationResponse Location { get; set; }
     public List<RateResponse> Rates { get; set; }
     public List<PromotionResponse> Promotions { get; set; }
     public List<ReviewResponse> Reviews { get; set; }

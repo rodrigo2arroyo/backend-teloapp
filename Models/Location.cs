@@ -23,5 +23,9 @@ public partial class Location
 
     public string? UpdatedBy { get; set; }
 
+    public decimal? Latitude { get; set; }
+
+    public decimal? Longitude { get; set; }
+
     public virtual ICollection<Hotel> Hotels { get; set; } = new List<Hotel>();
 }
