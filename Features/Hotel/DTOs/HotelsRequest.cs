@@ -9,4 +9,6 @@ public class HotelsRequest
     public decimal? MaxPrice { get; set; } // Filtrar por precio máximo
     public int PageNumber { get; set; } = 1; // Paginación (página actual)
     public int PageSize { get; set; } = 10; // Tamaño de página
+    public decimal? UserLatitude { get; set; }
+    public decimal? UserLongitude { get; set; }
 }

@@ -7,4 +7,5 @@ public class LocationResponse
     public string Street { get; set; }
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
+    public double? DistanceKm { get; set; }
 }

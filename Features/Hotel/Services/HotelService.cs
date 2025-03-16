@@ -8,64 +8,11 @@ using DotNetEnv;
 namespace TeloApi.Features.Hotel.Services;
 using Models;
 
-public class HotelService(IHotelRepository hotelRepository) : IHotelService
+public class HotelService(IHotelRepository hotelRepository, GoogleMapsService googleMapsService) : IHotelService
 {
-    private async Task<(string City, string District, string Street)> GetAddressFromCoordinates(decimal latitude, decimal longitude)
-    {
-        Env.Load();
-        string apiKey = Environment.GetEnvironmentVariable("GOOGLE_MAPS_API_KEY");
-        if (string.IsNullOrEmpty(apiKey)) throw new Exception("Google Maps API Key is missing. Make sure it's set in the .env file.");
-        
-        string url = $"https://maps.googleapis.com/maps/api/geocode/json?latlng={latitude},{longitude}&key={apiKey}";
-
-        using (var httpClient = new HttpClient())
-        {
-            var response = await httpClient.GetStringAsync(url);
-            var data = JsonSerializer.Deserialize<GoogleGeocodingResponse>(response);
-
-            if (data != null && data.Results.Any())
-            {
-                var bestResult = data.Results.FirstOrDefault();
-                var addressComponents = bestResult.AddressComponents;
-
-                string city = "";
-                string district = "";
-                string streetName = "";
-                string streetNumber = "";
-
-                // Recorrer todos los addressComponents para obtener cada dato
-                foreach (var component in addressComponents)
-                {
-                    if (component.Types.Contains("locality"))
-                    {
-                        district = component.LongName; // Ciudad
-                    }
-                    else if (component.Types.Contains("administrative_area_level_2"))
-                    {
-                        city = component.LongName; // Distrito
-                    }
-                    else if (component.Types.Contains("route"))
-                    {
-                        streetName = component.LongName; // Nombre de la calle
-                    }
-                    else if (component.Types.Contains("street_number"))
-                    {
-                        streetNumber = component.LongName; // Número de la calle
-                    }
-                }
-
-                // Concatenar Calle + Número (si existe número)
-                string street = !string.IsNullOrEmpty(streetNumber) ? $"{streetName} {streetNumber}" : streetName;
-
-                return (city, district, street);
-            }
-        }
-
-        return ("", "", "");
-    }
     public async Task<GenericResponse> CreateHotelAsync(CreateHotel request)
     {
-        var (city, district, street) = await GetAddressFromCoordinates(request.Location.Latitude, request.Location.Longitude);
+        var (city, district, street) = await googleMapsService.GetAddressFromCoordinates(request.Location.Latitude, request.Location.Longitude);
 
         var hotel = new Hotel
         {
@@ -123,18 +70,14 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
 
         return new GenericResponse { Message = "Images uploaded successfully." };
     }
-
     public async Task<List<string>> GetHotelImagesAsync(int hotelId)
     {
         var images = await hotelRepository.GetHotelImagesAsync(hotelId);
         return images.Select(i => i.ImageUrl).ToList();
     }
-
     public async Task<GenericResponse> UpdateHotelAsync(UpdateHotel request)
     {
         var hotel = await hotelRepository.GetHotelByIdWithDetailsAsync(request.Id);
-        if (hotel == null)
-            return new GenericResponse { Message = "Hotel not found." };
 
         hotel.Name = request.Name;
         hotel.UpdatedBy = request.UpdatedBy;
@@ -143,12 +86,10 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
 
         return new GenericResponse { Id = updatedHotel.Id, Message = "Hotel updated successfully." };
     }
-
     public async Task<HotelResponse> GetHotelByIdAsync(int hotelId)
     {
         var hotel = await hotelRepository.GetHotelByIdWithDetailsAsync(hotelId);
         Trace.WriteLine(hotel);
-        if (hotel == null) return null;
 
         return new HotelResponse
         {
@@ -208,68 +149,89 @@ public class HotelService(IHotelRepository hotelRepository) : IHotelService
             }).ToList()
         };
     }
-    
     public async Task<HotelsResult> ListHotelsAsync(HotelsRequest request)
     {
         var (hotels, totalCount) = await hotelRepository.GetHotelsAsync(request);
+        decimal? userLat = request.UserLatitude;
+        decimal? userLng = request.UserLongitude;
 
-        var hotelResponses = hotels.Select(h => new HotelResponse
+        var hotelResponses = new List<HotelResponse>();
+
+        foreach (var h in hotels)
         {
-            Id = h.Id,
-            Name = h.Name,
-            Description = h.Description!,
-            Location = new LocationResponse
+            var locationResponse = new LocationResponse
             {
                 City = h.Location.City,
                 District = h.Location.District,
                 Street = h.Location.Street,
                 Latitude = h.Location.Latitude,
-                Longitude = h.Location.Longitude,
-            },
-            Rates = h.Rates.Select(r => new RateResponse
+                Longitude = h.Location.Longitude
+            };
+            
+            if (userLat.HasValue && userLng.HasValue && h.Location.Latitude.HasValue && h.Location.Longitude.HasValue)
             {
-                Id = r.Id,
-                RateType = r.RateType,
-                Description = r.Description,
-                Price = r.Price,
-                Duration = r.Duration,
-                Services = r.ServiceRates.Select(sr => new ServiceResponse
+                locationResponse.DistanceKm = await googleMapsService.GetDrivingDistanceAsync(
+                    userLat.Value, userLng.Value, h.Location.Latitude.Value, h.Location.Longitude.Value
+                );
+            }
+
+            hotelResponses.Add(new HotelResponse
+            {
+                Id = h.Id,
+                Name = h.Name,
+                Description = h.Description!,
+                Location = locationResponse,
+                Rates = h.Rates.Select(r => new RateResponse
                 {
-                    Id = sr.Service.Id,
-                    Name = sr.Service.Name
-                }).ToList()
-            }).ToList(),
-            Promotions = h.Promotions.Select(p => new PromotionResponse
-            {
-                Id = p.Id,
-                RateType = p.RateType,
-                Description = p.Description,
-                PromotionalPrice = p.PromotionalPrice,
-                Duration = p.Duration,
-                Services = p.ServicePromotions.Select(sp => new ServiceResponse
+                    Id = r.Id,
+                    RateType = r.RateType,
+                    Description = r.Description,
+                    Price = r.Price,
+                    Duration = r.Duration,
+                    Services = r.ServiceRates.Select(sr => new ServiceResponse
+                    {
+                        Id = sr.Service.Id,
+                        Name = sr.Service.Name
+                    }).ToList()
+                }).ToList(),
+                Promotions = h.Promotions.Select(p => new PromotionResponse
                 {
-                    Id = sp.Service.Id,
-                    Name = sp.Service.Name
+                    Id = p.Id,
+                    RateType = p.RateType,
+                    Description = p.Description,
+                    PromotionalPrice = p.PromotionalPrice,
+                    Duration = p.Duration,
+                    Services = p.ServicePromotions.Select(sp => new ServiceResponse
+                    {
+                        Id = sp.Service.Id,
+                        Name = sp.Service.Name
+                    }).ToList()
+                }).ToList(),
+                Reviews = h.Reviews.Select(r => new ReviewResponse
+                {
+                    Id = r.Id,
+                    Author = r.Author,
+                    Description = r.Description,
+                    Rating = 0
+                }).ToList(),
+                Images = h.HotelImages.Select(img => img.ImageUrl).ToList(),
+                Contacts = h.Contacts.Select(c => new ContactResponse
+                {
+                    Id = c.Id,
+                    FirstName = c.Firstname,
+                    LastName = c.Lastname,
+                    Phone = c.Phone,
+                    CountryCode = c.CountryCode ?? "",
+                    Email = c.Email ?? "",
                 }).ToList()
-            }).ToList(),
-            Reviews = h.Reviews.Select(r => new ReviewResponse
-            {
-                Id = r.Id,
-                Author = r.Author,
-                Description = r.Description,
-                Rating = 0
-            }).ToList(),
-            Images = h.HotelImages.Select(img => img.ImageUrl).ToList(),
-            Contacts = h.Contacts.Select(c => new ContactResponse
-            {
-                Id = c.Id,
-                FirstName = c.Firstname,
-                LastName = c.Lastname,
-                Phone = c.Phone,
-                CountryCode = c.CountryCode??  "",
-                Email = c.Email?? "",
-            }).ToList()
-        }).ToList();
+            });
+        }
+
+        // Ordenar por cercanía si el usuario proporcionó ubicación
+        if (userLat.HasValue && userLng.HasValue)
+        {
+            hotelResponses = hotelResponses.OrderBy(h => h.Location.DistanceKm).ToList();
+        }
 
         return new HotelsResult
         {

@@ -24,7 +24,7 @@ builder.Services.AddCors(options =>
             .AllowAnyHeader();
     });
 });
-
+DotNetEnv.Env.Load();
 // Registrar RateService y RateRepository
 builder.Services.AddScoped<IRateService, RateService>();
 builder.Services.AddScoped<IRateRepository, RateRepository>();
@@ -37,6 +37,7 @@ builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<IContactService, ContactService>();
 
+builder.Services.AddHttpClient<GoogleMapsService>();
 // Otros servicios como controllers y swagger
 builder.Services.AddControllers()
     .AddJsonOptions(options =>
