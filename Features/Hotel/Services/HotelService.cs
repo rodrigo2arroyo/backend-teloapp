@@ -33,48 +33,6 @@ public class HotelService(IHotelRepository hotelRepository, GoogleMapsService go
 
         return new GenericResponse { Id = createdHotel.Id, Message = "Hotel created successfully." };
     }
-    public async Task<GenericResponse> UploadHotelImagesAsync(int hotelId, List<IFormFile> files)
-    {
-        if (files == null || files.Count == 0)
-            return new GenericResponse { Message = "No files uploaded." };
-
-        if (files.Count > 10)
-            return new GenericResponse { Message = "You can upload up to 10 images per hotel." };
-
-        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/hotels");
-        Directory.CreateDirectory(uploadsFolder); // Asegurar que la carpeta existe
-
-        var uploadedImages = new List<HotelImage>();
-
-        foreach (var file in files)
-        {
-            var fileName = $"{hotelId}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            var filePath = Path.Combine(uploadsFolder, fileName);
-
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var imageUrl = $"/images/hotels/{fileName}";
-
-            uploadedImages.Add(new HotelImage
-            {
-                HotelId = hotelId,
-                ImageUrl = imageUrl,
-                UploadedAt = DateTime.UtcNow
-            });
-        }
-
-        await hotelRepository.AddHotelImagesAsync(uploadedImages);
-
-        return new GenericResponse { Message = "Images uploaded successfully." };
-    }
-    public async Task<List<string>> GetHotelImagesAsync(int hotelId)
-    {
-        var images = await hotelRepository.GetHotelImagesAsync(hotelId);
-        return images.Select(i => i.ImageUrl).ToList();
-    }
     public async Task<GenericResponse> UpdateHotelAsync(UpdateHotel request)
     {
         var hotel = await hotelRepository.GetHotelByIdWithDetailsAsync(request.Id);
@@ -157,6 +115,9 @@ public class HotelService(IHotelRepository hotelRepository, GoogleMapsService go
 
         var hotelResponses = new List<HotelResponse>();
 
+        // Lista de tareas para calcular distancias en paralelo
+        var distanceTasks = new List<Task>();
+
         foreach (var h in hotels)
         {
             var locationResponse = new LocationResponse
@@ -167,15 +128,8 @@ public class HotelService(IHotelRepository hotelRepository, GoogleMapsService go
                 Latitude = h.Location.Latitude,
                 Longitude = h.Location.Longitude
             };
-            
-            if (userLat.HasValue && userLng.HasValue && h.Location.Latitude.HasValue && h.Location.Longitude.HasValue)
-            {
-                locationResponse.DistanceKm = await googleMapsService.GetDrivingDistanceAsync(
-                    userLat.Value, userLng.Value, h.Location.Latitude.Value, h.Location.Longitude.Value
-                );
-            }
 
-            hotelResponses.Add(new HotelResponse
+            var hotelResponse = new HotelResponse
             {
                 Id = h.Id,
                 Name = h.Name,
@@ -224,13 +178,29 @@ public class HotelService(IHotelRepository hotelRepository, GoogleMapsService go
                     CountryCode = c.CountryCode ?? "",
                     Email = c.Email ?? "",
                 }).ToList()
-            });
+            };
+
+            hotelResponses.Add(hotelResponse);
+
+            // Si el usuario proporcionó su ubicación, calcular la distancia en paralelo
+            if (userLat.HasValue && userLng.HasValue && h.Location.Latitude.HasValue && h.Location.Longitude.HasValue)
+            {
+                distanceTasks.Add(Task.Run(async () =>
+                {
+                    hotelResponse.Location.DistanceKm = await googleMapsService.GetDrivingDistanceAsync(
+                        userLat.Value, userLng.Value, h.Location.Latitude.Value, h.Location.Longitude.Value
+                    );
+                }));
+            }
         }
 
-        // Ordenar por cercanía si el usuario proporcionó ubicación
+        // Esperar que todas las distancias sean calculadas
+        await Task.WhenAll(distanceTasks);
+
+        // Si el usuario proporcionó ubicación, ordenar por menor distancia
         if (userLat.HasValue && userLng.HasValue)
         {
-            hotelResponses = hotelResponses.OrderBy(h => h.Location.DistanceKm).ToList();
+            hotelResponses = hotelResponses.OrderBy(h => h.Location.DistanceKm ?? double.MaxValue).ToList();
         }
 
         return new HotelsResult
@@ -238,5 +208,47 @@ public class HotelService(IHotelRepository hotelRepository, GoogleMapsService go
             Hotels = hotelResponses,
             TotalCount = totalCount
         };
+    }
+    public async Task<GenericResponse> UploadHotelImagesAsync(int hotelId, List<IFormFile> files)
+    {
+        if (files == null || files.Count == 0)
+            return new GenericResponse { Message = "No files uploaded." };
+
+        if (files.Count > 10)
+            return new GenericResponse { Message = "You can upload up to 10 images per hotel." };
+
+        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/hotels");
+        Directory.CreateDirectory(uploadsFolder); // Asegurar que la carpeta existe
+
+        var uploadedImages = new List<HotelImage>();
+
+        foreach (var file in files)
+        {
+            var fileName = $"{hotelId}_{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
+            var filePath = Path.Combine(uploadsFolder, fileName);
+
+            using (var stream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var imageUrl = $"/images/hotels/{fileName}";
+
+            uploadedImages.Add(new HotelImage
+            {
+                HotelId = hotelId,
+                ImageUrl = imageUrl,
+                UploadedAt = DateTime.UtcNow
+            });
+        }
+
+        await hotelRepository.AddHotelImagesAsync(uploadedImages);
+
+        return new GenericResponse { Message = "Images uploaded successfully." };
+    }
+    public async Task<List<string>> GetHotelImagesAsync(int hotelId)
+    {
+        var images = await hotelRepository.GetHotelImagesAsync(hotelId);
+        return images.Select(i => i.ImageUrl).ToList();
     }
 }
