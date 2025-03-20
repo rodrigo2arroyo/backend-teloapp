@@ -34,4 +34,6 @@ public partial class Hotel
     public virtual ICollection<Rate> Rates { get; set; } = new List<Rate>();
 
     public virtual ICollection<Review> Reviews { get; set; } = new List<Review>();
+
+    public virtual ICollection<UserFavoriteHotel> UserFavoriteHotels { get; set; } = new List<UserFavoriteHotel>();
 }

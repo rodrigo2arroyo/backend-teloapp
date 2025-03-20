@@ -20,6 +20,8 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<District> Districts { get; set; }
 
+    public virtual DbSet<EmailVerification> EmailVerifications { get; set; }
+
     public virtual DbSet<Hotel> Hotels { get; set; }
 
     public virtual DbSet<HotelImage> HotelImages { get; set; }
@@ -37,6 +39,10 @@ public partial class AppDbContext : DbContext
     public virtual DbSet<ServicePromotion> ServicePromotions { get; set; }
 
     public virtual DbSet<ServiceRate> ServiceRates { get; set; }
+
+    public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<UserFavoriteHotel> UserFavoriteHotels { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
@@ -80,6 +86,24 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.City).HasMaxLength(255);
             entity.Property(e => e.Name).HasMaxLength(255);
+        });
+
+        modelBuilder.Entity<EmailVerification>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__EmailVer__3214EC0755F07F1A");
+
+            entity.ToTable("EmailVerification");
+
+            entity.HasIndex(e => e.Email, "UQ__EmailVer__A9D10534E1E5866E").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Email).HasMaxLength(255);
+            entity.Property(e => e.ExpirationTime).HasColumnType("datetime");
+            entity.Property(e => e.VerificationCode).HasMaxLength(6);
+            entity.Property(e => e.Verified).HasDefaultValue(false);
         });
 
         modelBuilder.Entity<Hotel>(entity =>
@@ -318,6 +342,47 @@ public partial class AppDbContext : DbContext
                 .HasForeignKey(d => d.ServiceId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ServiceRate_Service");
+        });
+
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__User__3214EC071C89620A");
+
+            entity.ToTable("User");
+
+            entity.HasIndex(e => e.Email, "UQ__User__A9D1053421A4CE40").IsUnique();
+
+            entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+            entity.Property(e => e.Email).HasMaxLength(255);
+            entity.Property(e => e.FirstName).HasMaxLength(50);
+            entity.Property(e => e.LastName).HasMaxLength(50);
+            entity.Property(e => e.PasswordHash).HasMaxLength(255);
+            entity.Property(e => e.Role).HasMaxLength(50);
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+        });
+
+        modelBuilder.Entity<UserFavoriteHotel>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PK__UserFavo__3214EC076C264EB4");
+
+            entity.HasIndex(e => new { e.UserId, e.HotelId }, "UQ_User_Hotel").IsUnique();
+
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("(getdate())")
+                .HasColumnType("datetime");
+
+            entity.HasOne(d => d.Hotel).WithMany(p => p.UserFavoriteHotels)
+                .HasForeignKey(d => d.HotelId)
+                .HasConstraintName("FK_UserFavoriteHotels_Hotel");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserFavoriteHotels)
+                .HasForeignKey(d => d.UserId)
+                .HasConstraintName("FK_UserFavoriteHotels_User");
         });
 
         OnModelCreatingPartial(modelBuilder);

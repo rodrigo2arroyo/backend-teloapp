@@ -11,6 +11,8 @@ using TeloApi.Features.Rate.Repositories;
 using TeloApi.Features.Rate.Services;
 using TeloApi.Features.Review.Repositories;
 using TeloApi.Features.Review.Services;
+using TeloApi.Features.User.Repositories;
+using TeloApi.Features.User.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +27,6 @@ builder.Services.AddCors(options =>
     });
 });
 DotNetEnv.Env.Load();
-// Registrar RateService y RateRepository
 builder.Services.AddScoped<IRateService, RateService>();
 builder.Services.AddScoped<IRateRepository, RateRepository>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
@@ -36,6 +37,13 @@ builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
 builder.Services.AddScoped<IContactService, ContactService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEmailVerificationRepository, EmailVerificationRepository>();
+builder.Services.AddScoped<IEmailVerificationService, EmailVerificationService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IUserFavoriteHotelsRepository, UserFavoriteHotelsRepository>();
+builder.Services.AddScoped<IUserFavoriteHotelsService, UserFavoriteHotelsService>();
 
 builder.Services.AddHttpClient<GoogleMapsService>();
 // Otros servicios como controllers y swagger
